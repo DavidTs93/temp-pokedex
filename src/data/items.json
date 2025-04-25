@@ -1,0 +1,44 @@
+[
+  {
+    "id": "ITEM_MASTER_BALL",
+    "name": "Master Ball",
+    "category": "ITEM_POKEBALL",
+    "description": "Master Ball",
+    "spriteUrl": "/sprites/items/pokeball/masterball.png"
+  },
+  {
+    "id": "ITEM_CHERI_BERRY",
+    "name": "Cherri Berry",
+    "category": "ITEM_BERRY",
+    "description": "Cherri Berry",
+    "spriteUrl": "/sprites/items/berry/cherriberry.png"
+  },
+  {
+    "id": "ITEM_POTION",
+    "name": "Potion",
+    "category": "ITEM_MEDICINE",
+    "description": "Potion",
+    "spriteUrl": "/sprites/items/medicine/potion.png"
+  },
+  {
+    "id": "ITEM_HP_UP",
+    "name": "HP Up",
+    "category": "ITEM_VITAMIN",
+    "description": "HP Up",
+    "spriteUrl": "/sprites/items/vitamin/hpup.png"
+  },
+  {
+    "id": "ITEM_GUARD_SPEC",
+    "name": "Guard Spec",
+    "category": "ITEM_BATTLE",
+    "description": "Guard Spec",
+    "spriteUrl": "/sprites/items/battle/guardspec.png"
+  },
+  {
+    "id": "ITEM_TM01",
+    "name": "TM01",
+    "category": "ITEM_TM_HM",
+    "description": "TM01 Focus Punch",
+    "spriteUrl": "/sprites/items/tmhm/tm01.png"
+  }
+]

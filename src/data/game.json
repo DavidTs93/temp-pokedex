@@ -1,0 +1,95 @@
+{
+  "stats": [
+    { "id": "hp", "name": "HP", "abbreviation": "HP" },
+    { "id": "attack", "abbreviation": "Atk" },
+    { "id": "defense" },
+    { "id": "special_attack" },
+    { "id": "special_defense" },
+    { "id": "speed" }
+  ],
+  "times": [
+    { "id": "day", "name": "Day", "color": "#F8D030" },
+    { "id": "night", "name": "Night", "color": "#7038F8" },
+    { "id": "dawn", "name": "Dawn", "color": "#F5AC78" },
+    { "id": "dusk", "name": "Dusk", "color": "#B97A57" }
+  ],
+  "seasons": [
+    { "id": "spring", "name": "Spring", "color": "#98FB98" },
+    { "id": "summer", "name": "Summer", "color": "#FFA500" },
+    { "id": "autumn", "name": "Autumn", "color": "#D2691E" },
+    { "id": "winter", "name": "Winter", "color": "#87CEEB" }
+  ],
+  "moveCategories": [
+    { "id": "physical", "name": "Physical" },
+    { "id": "special", "name": "Special" },
+    { "id": "status", "name": "Status" }
+  ],
+  "itemCategories": [
+    { "id": "key", "name": "Key Items" },
+    { "id": "ball", "name": "Poké Balls" },
+    { "id": "battle", "name": "Battle Items" },
+    { "id": "berry", "name": "Berries" },
+    { "id": "medicine", "name": "Medicine" },
+    { "id": "tm", "name": "TMs & HMs" },
+    { "id": "misc", "name": "Miscellaneous" }
+  ],
+  "encounterMethods": [
+    { "id": "standard", "name": "Standard", "color": "#A8A878" },
+    { "id": "fishing", "name": "Fishing", "color": "#6890F0" },
+    { "id": "surfing", "name": "Surfing", "color": "#98D8D8" },
+    { "id": "headbutt", "name": "Headbutt", "color": "#F08030" },
+    { "id": "rock_smash", "name": "Rock Smash", "color": "#C03028" }
+  ],
+  "regions": [
+    { "id": "kanto", "name": "Kanto" },
+    { "id": "johto", "name": "Johto" },
+    { "id": "hoenn", "name": "Hoenn" },
+    { "id": "sinnoh", "name": "Sinnoh" },
+    { "id": "unova", "name": "Unova" },
+    { "id": "kalos", "name": "Kalos" },
+    { "id": "alola", "name": "Alola" },
+    { "id": "galar", "name": "Galar" },
+    { "id": "paldea", "name": "Paldea" }
+  ],
+  "genders": [
+    { "id": "male", "name": "♂", "color": "#0000FF" },
+    { "id": "female", "name": "♀", "color": "#FF00FF" }
+  ],
+  "evolutionMethods": [
+    { "id": "level", "valueType": "number" },
+    { "id": "useItem", "valueType": "string" },
+    { "id": "heldItem", "valueType": "string" },
+    { "id": "trade", "valueType": "boolean" },
+    { "id": "gender", "valueType": "string" },
+    { "id": "time", "valueType": "string" },
+    { "id": "move", "valueType": "string" },
+    { "id": "season", "valueType": "string" },
+    { "id": "location", "valueType": "string" },
+    { "id": "partner", "valueType": "number |string" },
+    { "id": "region", "valueType": "string" },
+    { "id": "friendship", "valueType": "boolean" },
+    { "id": "friendshipCompare", "valueType": "comparison" },
+    { "id": "attackDefenseCompare", "valueType": "comparison" }
+  ],
+  "namePrefixes": {
+    "ability": "ABILITY_",
+    "type": "TYPE_",
+    "move_effect_type": "EFFECT_",
+    "move_target": "MOVE_TARGET_",
+    "move_flag": "FLAG_",
+    "move": "MOVE_",
+    "item": "ITEM_",
+    "item_move_tm": "ITEM_TM_",
+    "item_move_hm": "ITEM_HM_",
+    "egg_group": "EGG_GROUP_",
+    "pokemon": "SPECIES_",
+    "location": "MAPSEC_"
+  },
+  "ignore": {
+    "ability": ["ABILITY_NONE"],
+    "move": ["MOVE_NONE"],
+    "move_effect_type": ["EFFECT_HIT"],
+    "item": ["ITEM_NONE"],
+    "pokemon": ["SPECIES_NONE"]
+  }
+}

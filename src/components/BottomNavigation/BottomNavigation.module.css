@@ -1,0 +1,41 @@
+.bottomNavigation {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  padding: 1rem;
+  z-index: 1000;
+}
+
+.bottomContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.bottomLeft {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.bottomRight {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .bottomNavigation {
+    padding: 0.5rem;
+  }
+
+  .bottomContainer {
+    padding: 0 0.5rem;
+  }
+} 

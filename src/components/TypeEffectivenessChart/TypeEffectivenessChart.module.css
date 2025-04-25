@@ -1,0 +1,102 @@
+:root {
+  --chart-gap: 1rem;
+  --chart-padding: 1rem;
+  --chart-radius: 0.5rem;
+  --chart-bg: var(--bg-secondary);
+  --chart-text: var(--text-primary);
+  --chart-border: var(--border-color);
+  --type-header-padding: 0.5rem;
+  --type-header-radius: 0.25rem;
+  --cell-padding: 0.5rem;
+  --cell-radius: 0.25rem;
+}
+
+.chart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--chart-gap);
+  padding: var(--chart-padding);
+  background-color: var(--chart-bg);
+  border-radius: var(--chart-radius);
+  border: 1px solid var(--chart-border);
+}
+
+.chartHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--chart-gap);
+}
+
+.chartTitle {
+  margin: 0;
+  color: var(--chart-text);
+  font-size: 1.25rem;
+}
+
+.chartContent {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+th, td {
+  padding: var(--cell-padding);
+  text-align: center;
+  border: 1px solid var(--chart-border);
+}
+
+th {
+  font-weight: 500;
+  background-color: var(--bg-tertiary);
+}
+
+.typeHeader {
+  padding: var(--type-header-padding);
+  border-radius: var(--type-header-radius);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.typeHeader:hover {
+  opacity: 0.8;
+}
+
+.typeHeader.selected {
+  box-shadow: 0 0 0 2px var(--accent-color);
+}
+
+.effectivenessCell {
+  border-radius: var(--cell-radius);
+  font-weight: 500;
+}
+
+.effectivenessGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.groupTitle {
+  color: var(--chart-text);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.typeList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.typeBadge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  color: white;
+  text-transform: capitalize;
+} 

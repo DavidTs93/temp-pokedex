@@ -1,0 +1,24 @@
+:root {
+  --page-title-margin: 2rem 0;
+  --page-title-padding: 0.5rem 0;
+  --page-title-font-size: 2rem;
+  --page-title-font-weight: 600;
+  --page-title-color: var(--text-primary);
+  --page-title-border-color: var(--border-color);
+}
+
+.title {
+  margin: var(--page-title-margin);
+  padding: var(--page-title-padding);
+  font-size: var(--page-title-font-size);
+  font-weight: var(--page-title-font-weight);
+  color: var(--page-title-color);
+  border-bottom: 1px solid var(--page-title-border-color);
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: calc(var(--page-title-font-size) * 0.8);
+    margin: calc(var(--page-title-margin) * 0.8);
+  }
+} 

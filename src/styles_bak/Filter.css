@@ -1,0 +1,52 @@
+:root {
+  --filter-background-color: var(--background-color);
+  --filter-border-color: var(--border-color);
+  --filter-text-color: var(--text-color);
+  --filter-hover-color: var(--hover-color);
+  --filter-focus-color: var(--primary-color);
+  --filter-label-color: var(--text-color);
+}
+
+.filter-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.filter-label {
+  color: var(--filter-label-color);
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.filter-select {
+  padding: 0.5rem;
+  border: 1px solid var(--filter-border-color);
+  border-radius: 4px;
+  background-color: var(--filter-background-color);
+  color: var(--filter-text-color);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.filter-select:hover {
+  border-color: var(--filter-hover-color);
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: var(--filter-focus-color);
+  box-shadow: 0 0 0 2px rgba(var(--filter-focus-color-rgb), 0.2);
+}
+
+.filter-select option {
+  background-color: var(--filter-background-color);
+  color: var(--filter-text-color);
+}
+
+.filter-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

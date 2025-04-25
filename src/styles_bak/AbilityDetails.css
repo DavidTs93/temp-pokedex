@@ -1,0 +1,131 @@
+:root {
+  --ability-details-gap: 1.5rem;
+  --ability-details-padding: 1rem;
+  --ability-detail-label-color: #666;
+  --ability-detail-text-color: #333;
+  --ability-detail-bg: #f0f0f0;
+  --ability-detail-radius: 0.25rem;
+  --ability-detail-padding: 0.5rem;
+}
+
+.ability-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ability-details-gap);
+  padding: var(--ability-details-padding);
+}
+
+.ability-header {
+  display: flex;
+  align-items: center;
+  gap: var(--ability-details-gap);
+  flex-wrap: wrap;
+}
+
+.ability-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--ability-detail-text-color);
+  margin: 0;
+}
+
+.ability-description {
+  background-color: var(--ability-detail-bg);
+  padding: var(--ability-detail-padding);
+  border-radius: var(--ability-detail-radius);
+  color: var(--ability-detail-text-color);
+  line-height: 1.5;
+}
+
+.ability-effect {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.effect-label {
+  font-weight: bold;
+  color: var(--ability-detail-label-color);
+}
+
+.effect-text {
+  color: var(--ability-detail-text-color);
+  line-height: 1.5;
+}
+
+.ability-properties {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--ability-details-gap);
+}
+
+.property-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.property-label {
+  font-weight: bold;
+  color: var(--ability-detail-label-color);
+  font-size: 0.875rem;
+}
+
+.property-value {
+  color: var(--ability-detail-text-color);
+}
+
+.known-by {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.known-by-label {
+  font-weight: bold;
+  color: var(--ability-detail-label-color);
+}
+
+.pokemon-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pokemon-item {
+  padding: var(--ability-detail-padding);
+  background-color: var(--ability-detail-bg);
+  border-radius: var(--ability-detail-radius);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.pokemon-item:hover {
+  background-color: var(--ability-detail-hover);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  :root {
+    --ability-details-gap: 1rem;
+    --ability-details-padding: 0.75rem;
+  }
+
+  .ability-properties {
+    grid-template-columns: 1fr;
+  }
+
+  .ability-header {
+    justify-content: center;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ability-detail-label-color: #999;
+    --ability-detail-text-color: #fff;
+    --ability-detail-bg: #333;
+    --ability-detail-hover: #444;
+  }
+}

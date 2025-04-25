@@ -1,0 +1,139 @@
+:root {
+  --move-details-gap: 1.5rem;
+  --move-details-padding: 1rem;
+  --move-type-gap: 0.5rem;
+  --move-type-padding: 0.5rem 1rem;
+  --move-type-radius: 1rem;
+  --move-detail-label-color: #666;
+  --move-detail-text-color: #333;
+  --move-detail-bg: #f0f0f0;
+  --move-detail-radius: 0.25rem;
+  --move-detail-padding: 0.5rem;
+}
+
+.move-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.move-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.move-icon {
+  width: 48px;
+  height: 48px;
+  background-color: var(--bg-tertiary);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.move-icon img {
+  width: 32px;
+  height: 32px;
+}
+
+.move-title {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1.5rem;
+}
+
+.move-type {
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-transform: capitalize;
+}
+
+.move-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.stat-item {
+  background-color: var(--bg-tertiary);
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.stat-label {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.move-description {
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.move-pokemon {
+  margin-top: 1rem;
+}
+
+.pokemon-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.pokemon-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background-color: var(--bg-tertiary);
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: background-color 0.3s;
+}
+
+.pokemon-item:hover {
+  background-color: var(--bg-secondary);
+}
+
+.pokemon-image {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.pokemon-name {
+  font-weight: 500;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .move-details {
+    padding: 1rem;
+  }
+
+  .move-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pokemon-list {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}

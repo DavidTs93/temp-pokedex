@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "language": "en",
+  "title": "Game Name Pokédex",
+  "pageTitle": "Game Name Pokédex - Complete Pokémon Database",
+  "pagination": {
+    "pokemon": 20,
+    "moves": 25,
+    "items": 25,
+    "locations": 8,
+    "abilities": 30
+  }
+}
