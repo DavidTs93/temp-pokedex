@@ -4,13 +4,13 @@ import { PokemonDetails } from '../components/details';
 import { useGameData } from '../contexts/GameDataContext';
 import { BaseDataPage, Column } from '../components/BaseDataPage';
 
-const PokedexPage: React.FC = () => {
+const PokemonPage: React.FC = () => {
   const { gameData } = useGameData();
 
   // Get data from GameData
-  const pokemonData = Object.values(gameData.pokemon.byId);
+  const pokemonData = Object.values(gameData.pokemon.byId).filter(p => !p.ignored);
   const types = Object.values(gameData.types.byId);
-  const abilities = Object.values(gameData.abilities.byId);
+  const abilities = Object.values(gameData.abilities.byId).filter(a => !a.ignored);
   const eggGroups = Object.values(gameData.eggGroups.byId);
   const stats = Object.values(gameData.gameConfig.stats.byId);
 
@@ -20,7 +20,7 @@ const PokedexPage: React.FC = () => {
     label: type.name
   }));
 
-  const abilityOptions = abilities.map((ability: Ability) => ({
+  const abilityOptions = abilities.filter(a => !a.ignored).map((ability: Ability) => ({
     value: ability.id,
     label: ability.name
   }));
@@ -42,7 +42,8 @@ const PokedexPage: React.FC = () => {
     },
     {
       header: 'Abilities',
-      accessor: ((pokemon: Pokemon) => pokemon.abilities.map(a => a.name).join(', ')) as unknown as keyof Pokemon,
+      accessor: ((pokemon: Pokemon) => pokemon.abilities.
+        filter(a => !a.ignored).map(a => a.name).join(', ')) as unknown as keyof Pokemon,
       width: '10%',
       sortable: true
     },
@@ -62,7 +63,7 @@ const PokedexPage: React.FC = () => {
 
   return (
     <BaseDataPage<Pokemon>
-      title="Pokédex"
+      title="Pokémon"
       description="Browse and search for Pokémon"
       data={pokemonData}
       columns={columns}
@@ -83,4 +84,4 @@ const PokedexPage: React.FC = () => {
   );
 };
 
-export default PokedexPage;
+export default PokemonPage;

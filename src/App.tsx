@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { DataLoader } from './components/DataLoader';
+import { SortProvider } from './contexts/SortContext';
 import AppRoutes from './routes';
 import styles from './styles/App.module.css';
 import './styles/global.css';
@@ -12,7 +13,9 @@ const App: React.FC = () => {
       <ThemeProvider>
         <div className={styles.app}>
           <DataLoader>
-            <AppRoutes />
+            <SortProvider>
+              <AppRoutes />
+            </SortProvider>
           </DataLoader>
         </div>
       </ThemeProvider>

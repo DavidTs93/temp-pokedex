@@ -1,35 +1,39 @@
 import { IMoveCategory, IMoveTarget, IMoveEffectType, IMoveFlag, IItemCategory, IStat, IEggGroup,
   IEncounterMethod, ITime, ISeason, IRegion, IEvolutionMethod, IAbility, IType,
   ITypeEffectivenessLevel, ITypeEffectiveness, IMove, IItem, IMoveItem, IPokemonLevelUpMove,
-  IPokemonMoves, IPokemonHeldItem, IPokemonStats, IPokemon, IPokemonEncounter, ILocation,
-  IEvolutionComparison, IEvolution, IPaginationConfig, IConfig, IGameConfig, ICacheId } from "./interfaces";
-import { isUndefined, isDefined, isAllDefined, isNull, isString, isOptionalString, isNumber, isValidNumber,
+  IPokemonMoves, IPokemonMovesInfo, IPokemonHeldItem, IPokemonStats, IPokemon, IPokemonEncounter, ILocation,
+  IEvolutionComparison, IEvolution, IPaginationConfig, IConfig, IGameConfig, IById } from "./interfaces";
+import { isUndefined, isDefined, isAllDefined, isString, isOptionalString, isNumber, isValidNumber,
   isOptionalValidNumber, isStringOrValidNumber, isOptionalStringOrValidNumber, isBoolean, isOptionalBoolean,
   isStringArray, isOptionalStringArray, isInt, isMap, hasPrefix, noPrefix, normalizeName, isEmpty, isNotEmpty,
-  validateColor, validateNotNegative, validateNotGuaranteed, isEquals, uniqueByEquals } from "../utils/utils";
+  validateNotNegative, validateNotGuaranteed, isEquals, uniqueByEquals, logError } from "../utils/utils";
 
 // From configs
 
 export class MoveCategory {
   private constructor(
     public readonly id: string,
-    public readonly name: string
+    public readonly name: string,
+    public readonly color?: string,
+    public readonly spriteUrl?: string
   ) {}
 
   equals(other: MoveCategory): boolean {
     return this.id === other.id;
   }
-  
+
   static fromInterface(
     moveCategory: IMoveCategory,
     prefix?: string
   ): Readonly<MoveCategory> | undefined {
-    if (!moveCategory || !isString(moveCategory.id) || !isOptionalString(moveCategory.name)) {
+    if (!moveCategory || !isString(moveCategory.id) || !isOptionalString(moveCategory.name) ||
+      !isOptionalString(moveCategory.color) || !isOptionalString(moveCategory.spriteUrl)) {
+      logError("move category", moveCategory);
       return undefined;
     }
 
     const name = normalizeName(moveCategory.name, moveCategory.id, prefix);
-    return Object.freeze(new MoveCategory(moveCategory.id, name));
+    return Object.freeze(new MoveCategory(moveCategory.id, name, moveCategory.color, moveCategory.spriteUrl));
   }
 }
 
@@ -50,12 +54,13 @@ export class MoveTarget {
     const name = normalizeName(undefined, id, prefix);
     return Object.freeze(new MoveTarget(id, name));
   }
-  
+
   static fromInterface(
     moveTarget: IMoveTarget,
     prefix?: string
   ): Readonly<MoveTarget> | undefined {
     if (!moveTarget ||!isString(moveTarget.id) || !isOptionalString(moveTarget.name)) {
+      logError("move target", moveTarget);
       return undefined;
     }
 
@@ -67,7 +72,8 @@ export class MoveTarget {
 export class MoveEffectType {
   private constructor(
     public readonly id: string,
-    public readonly name: string
+    public readonly name: string,
+    public readonly ignored: boolean
   ) {}
 
   equals(other: MoveEffectType): boolean {
@@ -76,22 +82,25 @@ export class MoveEffectType {
 
   static fromId(
     id: string,
+    isIgnoredMoveEffectType?: (id: string) => boolean,
     prefix?: string
   ): Readonly<MoveEffectType> {
     const name = normalizeName(undefined, id, prefix);
-    return Object.freeze(new MoveEffectType(id, name));
+    return Object.freeze(new MoveEffectType(id, name, !!isIgnoredMoveEffectType?.(id)));
   }
 
   static fromInterface(
     moveEffectType: IMoveEffectType,
+    isIgnoredMoveEffectType?: (id: string) => boolean,
     prefix?: string
   ): Readonly<MoveEffectType> | undefined {
     if (!moveEffectType || !isString(moveEffectType.id) || !isOptionalString(moveEffectType.name)) {
+      logError("move effect type", moveEffectType);
       return undefined;
     }
 
     const name = normalizeName(moveEffectType.name, moveEffectType.id, prefix);
-    return Object.freeze(new MoveEffectType(moveEffectType.id, name));
+    return Object.freeze(new MoveEffectType(moveEffectType.id, name, !!isIgnoredMoveEffectType?.(moveEffectType.id)));
   }
 }
 
@@ -112,12 +121,13 @@ export class MoveFlag {
     const name = normalizeName(undefined, id, prefix);
     return Object.freeze(new MoveFlag(id, name));
   }
-  
+
   static fromInterface(
     moveFlag: IMoveFlag,
     prefix?: string
   ): Readonly<MoveFlag> | undefined {
     if (!moveFlag || !isString(moveFlag.id) || !isOptionalString(moveFlag.name)) {
+      logError("move flag", moveFlag);
       return undefined;
     }
 
@@ -136,11 +146,20 @@ export class ItemCategory {
     return this.id === other.id;
   }
 
+  static fromId(
+    id: string,
+    prefix?: string
+  ): Readonly<MoveFlag> {
+    const name = normalizeName(undefined, id, prefix);
+    return Object.freeze(new ItemCategory(id, name));
+  }
+
   static fromInterface(
     itemCategory: IItemCategory,
     prefix?: string
   ): Readonly<ItemCategory> | undefined {
     if (!itemCategory || !isString(itemCategory.id) || !isOptionalString(itemCategory.name)) {
+      logError("item category", itemCategory);
       return undefined;
     }
 
@@ -185,6 +204,7 @@ export class Stat {
     prefix?: string
   ): Readonly<Stat> | undefined {
     if (!stat || !isString(stat.id) || !isOptionalString(stat.name) || !isOptionalString(stat.abbreviation)) {
+      logError("stat", stat);
       return undefined;
     }
 
@@ -217,6 +237,7 @@ export class EggGroup {
     prefix?: string
   ): Readonly<EggGroup> | undefined {
     if (!eggGroup || !isString(eggGroup.id) || !isOptionalString(eggGroup.name)) {
+      logError("egg group", eggGroup);
       return undefined;
     }
 
@@ -243,6 +264,7 @@ export class EncounterMethod {
   ): Readonly<EncounterMethod> | undefined {
     if (!encounterMethod || !isString(encounterMethod.id) || !isOptionalString(encounterMethod.name) ||
       !isOptionalString(encounterMethod.color) || !isOptionalString(encounterMethod.spriteUrl)) {
+      logError("encounter method", encounterMethod);
       return undefined;
     }
 
@@ -269,6 +291,7 @@ export class Time {
   ): Readonly<Time> | undefined {
     if (!time || !isString(time.id) || !isOptionalString(time.name) ||
       !isOptionalString(time.color) || !isOptionalString(time.spriteUrl)) {
+      logError("time", time);
       return undefined;
     }
 
@@ -295,6 +318,7 @@ export class Season {
   ): Readonly<Season> | undefined {
     if (!season || !isString(season.id) || !isOptionalString(season.name) ||
       !isOptionalString(season.color) || !isOptionalString(season.spriteUrl)) {
+      logError("season", season);
       return undefined;
     }
 
@@ -318,6 +342,7 @@ export class Region {
     prefix?: string
   ): Readonly<Region> | undefined {
     if (!region || !isString(region.id) || !isOptionalString(region.name)) {
+      logError("region", region);
       return undefined;
     }
 
@@ -346,6 +371,7 @@ export class EvolutionMethod {
   ): Readonly<EvolutionMethod> | undefined {
     if (!evolutionMethod || !isString(evolutionMethod.id) || !isOptionalString(evolutionMethod.name) ||
       !isString(evolutionMethod.valueType) || !isOptionalString(evolutionMethod.spriteUrl)) {
+      logError("evolution method 1", evolutionMethod);
       return undefined;
     }
 
@@ -365,6 +391,7 @@ export class EvolutionMethod {
       }
     }))];
     if (isEmpty(valueTypes) || !isAllDefined(valueTypes)) {
+      logError("evolution method 2", evolutionMethod);
       return undefined;
     }
 
@@ -385,6 +412,15 @@ export class Ability {
 
   equals(other: Ability): boolean {
     return this.id === other.id;
+  }
+
+  static fromId(
+    id: string,
+    isIgnoredAbility?: (id: string) => boolean,
+    prefix?: string
+  ): Readonly<Ability> | undefined {
+    const name = normalizeName(undefined, id, prefix);
+    return Object.freeze(new Ability(id, name, !!isIgnoredAbility?.(id)));
   }
 
   static fromInterface(
@@ -423,12 +459,12 @@ export class Type {
   ): Readonly<Type> | undefined {
     if (!type || !isString(type.id) || !isOptionalString(type.name) ||
       !isOptionalString(type.color) || !isOptionalString(type.spriteUrl)) {
+      logError("type", type);
       return undefined;
     }
 
     const name = normalizeName(type.name, type.id, prefix);
-    const color = validateColor(type.color);
-    return Object.freeze(new Type(type.id, name, color, type.spriteUrl));
+    return Object.freeze(new Type(type.id, name, type.color, type.spriteUrl));
   }
 }
 
@@ -470,14 +506,15 @@ export class TypeEffectivenessLevel {
     if (!typeEffectivenessLevel || !isInt(typeEffectivenessLevel.level) ||
       !isOptionalStringOrValidNumber(typeEffectivenessLevel.multiplier) ||
       !isOptionalBoolean(typeEffectivenessLevel.immunity) || !isOptionalString(typeEffectivenessLevel.color)) {
+      logError("type effectiveness level", typeEffectivenessLevel);
       return undefined;
     }
 
     const isImmunity = typeEffectivenessLevel.immunity === true;
     const multiplier = TypeEffectivenessLevel.getMultiplier(typeEffectivenessLevel.multiplier,
       isImmunity, typeEffectivenessLevel.level);
-    const color = validateColor(typeEffectivenessLevel.color);
-    return Object.freeze(new TypeEffectivenessLevel(typeEffectivenessLevel.level, multiplier, isImmunity, color));
+    return Object.freeze(new TypeEffectivenessLevel(typeEffectivenessLevel.level, multiplier,
+      isImmunity, typeEffectivenessLevel.color));
   }
 }
 
@@ -503,6 +540,7 @@ export class TypeEffectiveness {
   ): Readonly<TypeEffectiveness> | undefined {
     if (!typeEffectiveness || !findType || !findTel || !isString(typeEffectiveness.attacker) ||
       !isString(typeEffectiveness.defender) || !isValidNumber(typeEffectiveness.level)) {
+      logError("type effectiveness 1", typeEffectiveness);
       return undefined;
     }
 
@@ -510,12 +548,13 @@ export class TypeEffectiveness {
     const defender = findType(typeEffectiveness.defender);
     const tel = findTel(typeEffectiveness.level);
     if (!attacker || !defender || !tel) {
+      logError("type effectiveness 2", typeEffectiveness);
       return undefined;
     }
 
     return Object.freeze(new TypeEffectiveness(attacker, defender, tel));
   }
-  
+
   calculateDefensiveEffectiveness(
     defender: readonly Type[],
     getTel: (attacker: Type, defender: Type) => TypeEffectivenessLevel | undefined,
@@ -523,7 +562,7 @@ export class TypeEffectiveness {
   ): Readonly<TypeEffectivenessLevel> | undefined {
     return Object.freeze(TypeEffectiveness.calculateDefensiveEffectiveness([this.attacker], defender, getTel, findTel));
   }
-  
+
   static calculateDefensiveEffectiveness(
     attacker: readonly Type[],
     defender: readonly Type[],
@@ -583,11 +622,13 @@ export class MoveEffect {
     findMet: (id: string) => MoveEffectType | undefined
   ): Readonly<MoveEffect> | undefined {
     if (!isString(moveEffectType) || !isOptionalValidNumber(moveEffectChance) || !findMet) {
+      logError("move effect 1", moveEffectType);
       return undefined;
     }
 
     const effectType = findMet(moveEffectType);
     if (!effectType) {
+      logError("move effect 2", moveEffectType);
       return undefined;
     }
 
@@ -598,18 +639,18 @@ export class MoveEffect {
 
 export class Move {
   static readonly GUARANTEED_ACCURACY: number = 101;
-  static readonly DEFAULT_PRIORITY: number = 0;
+  private static readonly DEFAULT_PRIORITY: number = 0;
 
   private constructor(
     public readonly id: string,
     public readonly name: string,
     public readonly types: readonly Readonly<Type>[], // not empty, unique
-    public readonly category: Readonly<MoveCategory>,
     public readonly accuracy: number,
     public readonly priority: number,
     public readonly pp: number,
     public readonly target: Readonly<MoveTarget>,
     public readonly ignored: boolean,
+    public readonly category?: Readonly<MoveCategory>,
     public readonly power?: number,
     public readonly effect?: Readonly<MoveEffect>,
     public readonly flags?: readonly Readonly<MoveFlag>[], // not empty, unique
@@ -634,29 +675,31 @@ export class Move {
   static fromInterface(
     move: IMove,
     findType: (id: string) => Type | undefined,
-    findMc: (id: string) => MoveCategory | undefined,
     findMet: (id: string) => MoveEffectType | undefined,
     findMt: (id: string) => MoveTarget | undefined,
     findMf: (id: string) => MoveFlag | undefined,
+    findMc?: (id: string) => MoveCategory | undefined,
     isIgnoredMove?: (id: string) => boolean,
     prefix?: string
   ): Readonly<Move> | undefined {
-    if (!move || !findType || !findMc || !findMet || !findMt || !findMf || !isString(move.id) ||
+    if (!move || !findType || !findMet || !findMt || !findMf || !isString(move.id) ||
       !isOptionalString(move.name) || !isStringArray(move.types) || !isString(move.category) ||
       !isOptionalValidNumber(move.accuracy) || !isOptionalValidNumber(move.priority) ||
       !isInt(move.pp) || move.pp < 0 || !isString(move.target) || !isOptionalValidNumber(move.power) ||
       !isOptionalString(move.effectType) || !isOptionalValidNumber(move.effectChance) ||
       !isOptionalStringArray(move.flags) || !isOptionalString(move.description) || !isOptionalString(move.spriteUrl)) {
+      logError("move 1", move);
       return undefined;
     }
 
     const types = move.types.map(findType);
-    const category = findMc(move.category);
+    const category = findMc?.(move.category);
     const target = findMt(move.target);
     const effect = isString(move.effectType) ?
       MoveEffect.fromInterface(move.effectType, move.effectChance, findMet) : undefined;
     const flags = move.flags?.map(findMf);
-    if (!isAllDefined(types) || isEmpty(types) || !category || !target || (flags && !isAllDefined(flags))) {
+    if (!isAllDefined(types) || isEmpty(types) || (findMc && !category) || !target || (flags && !isAllDefined(flags))) {
+      logError("move 2", move);
       return undefined;
     }
 
@@ -667,8 +710,8 @@ export class Move {
     const ignored = !!isIgnoredMove?.(move.id);
     const power = validateNotNegative(move.power);
     const uf = isNotEmpty(flags) ? uniqueByEquals(flags) : undefined;
-    return Object.freeze(new Move(move.id, name, ut, category, accuracy, priority, move.pp, target,
-      ignored, power, effect, uf, move.description, move.spriteUrl));
+    return Object.freeze(new Move(move.id, name, ut, accuracy, priority, move.pp, target,
+      ignored, category, power, effect, uf, move.description, move.spriteUrl));
   }
 }
 
@@ -701,11 +744,13 @@ export class Item {
     if (!item || !findIc || !isString(item.id) || !isOptionalString(item.name) || !isString(item.category) ||
       !isOptionalString(item.itemId) || !isOptionalString(item.move) ||
       !isOptionalString(item.description) || !isOptionalString(item.spriteUrl)) {
+      logError("item 1", item);
       return undefined;
     }
 
     const category = findIc(item.category);
     if (!category) {
+      logError("item 2", item);
       return undefined;
     }
 
@@ -736,11 +781,13 @@ export class PokemonLevelUpMove {
     findMove: (id: string) => Move | undefined
   ): Readonly<PokemonLevelUpMove> | undefined {
     if (!pokemonLevelUpMove || !findMove || !isString(pokemonLevelUpMove.move) || !isInt(pokemonLevelUpMove.level)) {
+      logError("pokemon level up move 1", pokemonLevelUpMove);
       return undefined;
     }
 
     const move = findMove(pokemonLevelUpMove.move);
     if (!move) {
+      logError("pokemon level up move 2", pokemonLevelUpMove);
       return undefined;
     }
 
@@ -768,16 +815,19 @@ export class PokemonItemMove {
     findMoveItem: (id: Move) => Item | undefined
   ): Readonly<PokemonItemMove> | undefined {
     if (!pokemonItemMove || !findMove || !findMoveItem || !isString(pokemonItemMove)) {
+      logError("pokemon item move 1", pokemonItemMove);
       return undefined;
     }
 
     const move = findMove(pokemonItemMove);
     if (!move) {
+      logError("pokemon item move 2", pokemonItemMove);
       return undefined;
     }
 
     const item = findMoveItem(move);
     if (!item) {
+      logError("pokemon item move 3", pokemonItemMove);
       return undefined;
     }
 
@@ -787,6 +837,7 @@ export class PokemonItemMove {
 
 export class PokemonMoves {
   private constructor(
+    // At least one of the following is defined
     public readonly levelUp?: readonly Readonly<PokemonLevelUpMove>[], // not empty, unique
     public readonly item?: readonly Readonly<PokemonItemMove>[], // not empty, unique
     public readonly tutor?: readonly Readonly<Move>[], // not empty, unique
@@ -799,16 +850,14 @@ export class PokemonMoves {
   }
 
   static fromInterface(
-    pokemonMoves: IPokemonMoves | null,
+    pokemonMoves: IPokemonMoves,
     findMove: (id: string) => Move | undefined,
     findMoveItem: (id: Move) => Item | undefined
   ): Readonly<PokemonMoves> | undefined {
-    if (isNull(pokemonMoves)) {
-      return new PokemonMoves();
-    }
-
-    if (!pokemonMoves || !findMove || !findMoveItem || !isOptionalStringArray(pokemonMoves.item) ||
-      !isOptionalStringArray(pokemonMoves.tutor) || !isOptionalStringArray(pokemonMoves.egg)) {
+    if (!pokemonMoves || !findMove || !findMoveItem ||
+      !isOptionalStringArray(pokemonMoves.item) || !isOptionalStringArray(pokemonMoves.tutor) ||
+      !isOptionalStringArray(pokemonMoves.egg)) {
+      logError("pokemon moves 1", pokemonMoves);
       return undefined;
     }
 
@@ -818,6 +867,7 @@ export class PokemonMoves {
     const egg = pokemonMoves.egg?.map(findMove);
     if ((levelUp && !isAllDefined(levelUp)) || (item && !isAllDefined(item)) ||
       (tutor && !isAllDefined(tutor)) || (egg && !isAllDefined(egg))) {
+      logError("pokemon moves 2", pokemonMoves);
       return undefined;
     }
 
@@ -825,7 +875,42 @@ export class PokemonMoves {
     const iu = isNotEmpty(item) ? uniqueByEquals(item) : undefined;
     const tu = isNotEmpty(tutor) ? uniqueByEquals(tutor) : undefined;
     const eu = isNotEmpty(egg) ? uniqueByEquals(egg) : undefined;
+    if (!ulu && !iu && !tu && !eu) {
+      logError("pokemon moves 3", pokemonMoves);
+      return undefined;
+    }
+
     return Object.freeze(new PokemonMoves(ulu, iu, tu, eu));
+  }
+}
+
+export class PokemonMovesInfo {
+  private constructor(
+    // At least one of the following is defined
+    public readonly pokemon: number | string,
+    public readonly moves: Readonly<PokemonMoves>
+  ) {
+    this.pokemon = Object.freeze(pokemon);
+    this.moves = Object.freeze(moves);
+  }
+
+  static fromInterface(
+    pokemonMoves: IPokemonMovesInfo,
+    findMove: (id: string) => Move | undefined,
+    findMoveItem: (id: Move) => Item | undefined
+  ): Readonly<PokemonMovesInfo> | undefined {
+    if (!isStringOrValidNumber(pokemonMoves.pokemon) || !pokemonMoves.moves) {
+      logError("pokemon moves info 1", pokemonMoves);
+      return undefined;
+    }
+
+    const pms = PokemonMoves.fromInterface(pokemonMoves.moves, findMove, findMoveItem);
+    if (!pms) {
+      logError("pokemon moves info 2", pokemonMoves);
+      return undefined;
+    }
+
+    return Object.freeze(new PokemonMovesInfo(pokemonMoves.pokemon, pms));
   }
 }
 
@@ -849,11 +934,13 @@ export class PokemonHeldItem {
   ): Readonly<PokemonHeldItem> | undefined {
     if (!pokemonHeldItem || !findItem || !isString(pokemonHeldItem.item) ||
       !isOptionalValidNumber(pokemonHeldItem.chance)) {
+      logError("pokemon held item 1", pokemonHeldItem);
       return undefined;
     }
 
     const item = findItem(pokemonHeldItem.item);
     if (!item) {
+      logError("pokemon held item 2", pokemonHeldItem);
       return undefined;
     }
 
@@ -880,11 +967,13 @@ export class PokemonStat {
     findStat: (id: string) => Stat | undefined
   ): Readonly<PokemonStat> | undefined {
     if (!isString(stat) || !isValidNumber(value) || value < 0 || !findStat) {
+      logError("pokemon stat 1", stat);
       return undefined;
     }
 
     const s = findStat(stat);
     if (!s) {
+      logError("pokemon stat 2", stat);
       return undefined;
     }
 
@@ -906,6 +995,7 @@ export class PokemonStats {
     allStats: readonly Stat[]
   ): Readonly<PokemonStats> | undefined {
     if (!pokemonStats || !findStat || !allStats || !isMap(pokemonStats, isValidNumber)) {
+      logError("pokemon stats 1", pokemonStats);
       return undefined;
     }
 
@@ -913,6 +1003,7 @@ export class PokemonStats {
     Object.entries(pokemonStats).map(([stat, value]) => PokemonStat.fromInterface(stat, value, findStat)).
       filter(isDefined).forEach(s => ps[s.stat.id] = s);
     if (Object.keys(ps).length !== allStats.length) {
+      logError("pokemon stats 2", pokemonStats);
       return undefined;
     }
 
@@ -937,8 +1028,8 @@ export class Pokemon {
   ) {
     this.types = Object.freeze(types);
     this.abilities = Object.freeze(abilities);
-    this.stats = Object.freeze(stats);
     this.moves = Object.freeze(moves);
+    this.stats = Object.freeze(stats);
     this.heldItems = Object.freeze(heldItems);
     this.eggGroups = Object.freeze(eggGroups);
   }
@@ -949,48 +1040,56 @@ export class Pokemon {
 
   static fromInterface(
     pokemon: IPokemon,
+    optionalId: number,
     findType: (id: string) => Type | undefined,
     findAbility: (id: string) => Ability | undefined,
+    findMoves: (id: number, species: string) => PokemonMoves | undefined,
     findStat: (id: string) => Stat | undefined,
     allStats: readonly Stat[],
-    findMove: (id: string) => Move | undefined,
-    findMoveItem: (id: Move) => Item | undefined,
     findItem: (id: string) => Item | undefined,
     findEggGroup: (id: string) => EggGroup | undefined,
     isIgnoredPokemon?: (id: number, species: string) => boolean,
     prefix?: string
   ): Readonly<Pokemon> | undefined {
-    if (!pokemon || !findType || !findAbility || !findStat || !allStats || !findMove ||
-      !findMoveItem || !findItem || !findEggGroup || !isInt(pokemon.id) || pokemon.id <= 0 ||
-      !isString(pokemon.species) || !isOptionalString(pokemon.name) || !isStringArray(pokemon.types) ||
-      !isStringArray(pokemon.abilities) || !isOptionalStringArray(pokemon.eggGroups) ||
-      !isOptionalString(pokemon.spriteUrl)) {
+    if (!pokemon || !findType || !findAbility || !findStat || !allStats ||
+      !findItem || !findEggGroup || !isString(pokemon.species) || !isOptionalString(pokemon.name) ||
+      !isStringArray(pokemon.types) || !isStringArray(pokemon.abilities) ||
+      !isOptionalStringArray(pokemon.eggGroups) || !isOptionalString(pokemon.spriteUrl)) {
+      logError("pokemon 1", pokemon);
+      return undefined;
+    }
+
+    const id = pokemon.id ?? optionalId;
+    if (!isInt(id) || id <= 0) {
+      logError("pokemon 2", pokemon);
       return undefined;
     }
 
     // Number species not supported
-    if (pokemon.species === pokemon.species.trim() && isValidNumber(Number(pokemon.species))) {
+    if (isValidNumber(Number(pokemon.species))) {
+      logError("pokemon 3", pokemon);
       return undefined;
     }
 
     const types = pokemon.types.map(findType);
     const abilities = pokemon.abilities.map(findAbility);
+    const moves = findMoves(id, pokemon.species);
     const stats = PokemonStats.fromInterface(pokemon.stats, findStat, allStats);
-    const moves = PokemonMoves.fromInterface(pokemon.moves ?? null, findMove, findMoveItem);
     const heldItems = pokemon.heldItems?.map(item => PokemonHeldItem.fromInterface(item, findItem));
     const eggGroups = pokemon.eggGroups?.map(findEggGroup);
     if (isEmpty(types) || !isAllDefined(types) || isEmpty(abilities) || !isAllDefined(abilities) ||
-      !stats || !moves || (heldItems && !isAllDefined(heldItems)) || (eggGroups && !isAllDefined(eggGroups))) {
+      !stats || (heldItems && !isAllDefined(heldItems)) || (eggGroups && !isAllDefined(eggGroups))) {
+      logError("pokemon 4", pokemon);
       return undefined;
     }
 
     const name = normalizeName(pokemon.name, pokemon.species, prefix);
     const ut = uniqueByEquals(types);
     const ua = uniqueByEquals(abilities);
-    const ignored = !!isIgnoredPokemon?.(pokemon.id, pokemon.species);
+    const ignored = !!isIgnoredPokemon?.(id, pokemon.species);
     const uhi = heldItems && uniqueByEquals(heldItems);
     const ueg = eggGroups && uniqueByEquals(eggGroups);
-    return Object.freeze(new Pokemon(pokemon.id, pokemon.species, name, ut, ua, stats,
+    return Object.freeze(new Pokemon(id, pokemon.species, name, ut, ua, stats,
       ignored, moves, uhi, ueg, pokemon.spriteUrl));
   }
 }
@@ -1001,7 +1100,7 @@ export class PokemonEncounter {
   private constructor(
     public readonly pokemon: Readonly<Pokemon>,
     public readonly method: Readonly<EncounterMethod>,
-    public readonly chance: number,
+    public readonly chance?: number,
     public readonly time?: Readonly<Time>,
     public readonly season?: Readonly<Season>
   ) {
@@ -1025,8 +1124,9 @@ export class PokemonEncounter {
   ): Readonly<PokemonEncounter> | undefined {
     if (!pokemonEncounter || !findPokemon || !findEncounterMethod || !findTime || !findSeason ||
       !isStringOrValidNumber(pokemonEncounter.pokemon) || !isString(pokemonEncounter.method) ||
-      !validateNotGuaranteed(pokemonEncounter.chance) || !isOptionalString(pokemonEncounter.time) ||
-      !isOptionalString(pokemonEncounter.season)) {
+      (isDefined(pokemonEncounter.chance) && !validateNotGuaranteed(pokemonEncounter.chance)) ||
+      !isOptionalString(pokemonEncounter.time) || !isOptionalString(pokemonEncounter.season)) {
+      logError("pokemon encounter 1", pokemonEncounter);
       return undefined;
     }
 
@@ -1036,6 +1136,7 @@ export class PokemonEncounter {
     const season = isString(pokemonEncounter.season) ? findSeason(pokemonEncounter.season) : undefined;
     if (!pokemon || !method || (isString(pokemonEncounter.time) && !time) ||
       (isString(pokemonEncounter.season) && !season)) {
+      logError("pokemon encounter 2", pokemonEncounter);
       return undefined;
     }
 
@@ -1078,6 +1179,7 @@ export class Location {
       !isString(location.id) || !isOptionalString(location.name) ||
       !isOptionalBoolean(location.wilderness) || !isOptionalString(location.region) ||
       !isOptionalStringArray(location.items) || !isOptionalString(location.description)) {
+      logError("location 1", location);
       return undefined;
     }
 
@@ -1090,6 +1192,7 @@ export class Location {
     const items = location.items?.map(findItem);
     if ((isString(location.region) && !region) || (pokemonEncounters && !isAllDefined(pokemonEncounters)) ||
       (specialEncounters && !isAllDefined(specialEncounters)) || (items && !isAllDefined(items))) {
+      logError("location 2", location);
       return undefined;
     }
 
@@ -1138,8 +1241,10 @@ export class EvolutionComparison {
   ): Readonly<EvolutionComparison> | undefined {
     if (!comparison || (!isStringOrValidNumber(comparison.first) && !isBoolean(comparison.first)) ||
       (!isOptionalStringOrValidNumber(comparison.second) && !isOptionalBoolean(comparison.second))) {
+      logError("evolution comparison", comparison);
       return undefined;
     }
+
     const operator = comparison.operator ??
       (isString(comparison.second) ? EvolutionComparison.DEFAULT_OPERATOR : undefined);
     return Object.freeze(new EvolutionComparison(comparison.first, operator, comparison.second));
@@ -1158,23 +1263,26 @@ export class EvolutionRequirement {
   equals(other: EvolutionRequirement): boolean {
     return this.method.equals(other.method) && this.value.equals(other.value);
   }
-  
+
   static fromInterface(
     method: string,
     value: any,
     findEvolutionMethod: (id: string) => EvolutionMethod | undefined
   ): Readonly<EvolutionRequirement> | undefined {
     if (!isString(method) || isUndefined(value) || !findEvolutionMethod) {
+      logError("evolution requirement 1", method);
       return undefined;
     }
 
     const m = findEvolutionMethod(method);
     if (!m) {
+      logError("evolution requirement 2", method);
       return undefined;
     }
 
     const comparison = m.valueTypes.map(cmp => cmp(value)).find(isDefined);
     if (!comparison) {
+      logError("evolution requirement 3", method);
       return undefined;
     }
 
@@ -1203,18 +1311,21 @@ export class Evolution {
   ): Readonly<Evolution> | undefined {
     if (!evolution || !findPokemon || !findEvolutionMethod || !isStringOrValidNumber(evolution.pokemon) ||
       !isStringOrValidNumber(evolution.evolution) || !isMap(evolution.requirements, isDefined)) {
+      logError("evolution 1", evolution);
       return undefined;
     }
 
     const pokemon = findPokemon(evolution.pokemon);
     const evolutionPokemon = findPokemon(evolution.evolution);
     if (!pokemon || !evolutionPokemon) {
+      logError("evolution 2", evolution);
       return undefined;
     }
 
     const requirements = Object.entries(evolution.requirements).
       map(([key, value]) => EvolutionRequirement.fromInterface(key, value, findEvolutionMethod));
     if (!isAllDefined(requirements)) {
+      logError("evolution 3", evolution);
       return undefined;
     }
 
@@ -1234,12 +1345,16 @@ export class Cache<T> {
   findById(
     id: string
   ): Readonly<T> | undefined {
-    return this.byId[id.toLowerCase()];
+    return isString(id) ? this.byId[id.toLowerCase()] : undefined;
   }
 
   findByIdPrefix(
     prefix: string
   ): Readonly<T>[] {
+    if (!isString(prefix)) {
+      return [];
+    }
+
     prefix = prefix.toLowerCase();
     return Object.entries(this.byId).filter(([id]) => id.startsWith(prefix)).map(([_, v]) => v);
   }
@@ -1256,7 +1371,7 @@ export class Cache<T> {
   }
 }
 
-export class CacheById<T extends ICacheId<T>> {
+export class CacheById<T extends IById<T>> {
   private constructor(
     readonly byId: Readonly<Record<string, Readonly<T>>>
   ) {
@@ -1266,10 +1381,10 @@ export class CacheById<T extends ICacheId<T>> {
   findById(
     id: string
   ): Readonly<T> | undefined {
-    return this.byId[id.toLowerCase()];
+    return isString(id) ? this.byId[id.toLowerCase()] : undefined;
   }
 
-  static fromArray<T extends ICacheId<T>>(
+  static fromArray<T extends IById<T>>(
     data: T[]
   ): Readonly<CacheById<T>> {
     const byId: Record<string, Readonly<T>> = {};
@@ -1280,7 +1395,7 @@ export class CacheById<T extends ICacheId<T>> {
     return Object.freeze(new CacheById(byId));
   }
 
-  static fromMap<T extends ICacheId<T>>(
+  static fromMap<T extends IById<T>>(
     data: Readonly<Record<string, Readonly<T>>>
   ): Readonly<CacheById<T>> {
     const byId: Record<string, Readonly<T>> = {};
@@ -1292,7 +1407,7 @@ export class CacheById<T extends ICacheId<T>> {
   }
 }
 
-export class DependantCacheById<T extends ICacheId<T>> {
+export class DependantCacheById<T extends IById<T>> {
   private constructor(
     readonly byId: Readonly<Record<string, Readonly<T>>>,
     readonly existingCache: Readonly<CacheById<T>>
@@ -1304,10 +1419,10 @@ export class DependantCacheById<T extends ICacheId<T>> {
   findById(
     id: string
   ): Readonly<T> | undefined {
-    return this.existingCache.findById(id) ?? this.byId[id.toLowerCase()];
+    return isString(id) ? this.existingCache.findById(id) ?? this.byId[id.toLowerCase()] : undefined;
   }
 
-  static fromArray<T extends ICacheId<T>>(
+  static fromArray<T extends IById<T>>(
     data: T[],
     existingCache: Readonly<CacheById<T>>
   ): Readonly<DependantCacheById<T>> {
@@ -1320,11 +1435,11 @@ export class DependantCacheById<T extends ICacheId<T>> {
   }
 }
 
-export class UpdatingCacheById<T extends ICacheId<T>> {
+export class UpdatingCacheById<T extends IById<T>> {
   readonly byId: Record<string, Readonly<T>> = {};
 
   private constructor(
-    readonly create: (id: string) => T,
+    readonly create: (id: string) => T | undefined,
     readonly existingCache: Readonly<CacheById<T>>,
     readonly isIgnored?: (id: string) => boolean
   ) {}
@@ -1332,6 +1447,10 @@ export class UpdatingCacheById<T extends ICacheId<T>> {
   findById(
     id: string
   ): Readonly<T> | undefined {
+    if (!isString(id)) {
+      return undefined;
+    }
+
     const existing = this.existingCache.findById(id);
     if (isDefined(existing)) {
       return existing;
@@ -1359,8 +1478,8 @@ export class UpdatingCacheById<T extends ICacheId<T>> {
     return DependantCacheById.fromArray(Object.values(this.byId), this.existingCache);
   }
 
-  static fromData<T extends ICacheId<T>>(
-    create: (id: string) => T,
+  static fromData<T extends IById<T>>(
+    create: (id: string) => T | undefined,
     existingCache: Readonly<CacheById<T>>,
     isIgnored?: (id: string) => boolean
   ): Readonly<UpdatingCacheById<T>> {
@@ -1380,7 +1499,7 @@ export class TypeEffectivenessLevelCache {
   ): Readonly<TypeEffectivenessLevel> | undefined {
     return this.byLevel[level];
   }
-  
+
   static fromArray(
     typeEffectivenessLevels: readonly TypeEffectivenessLevel[]
   ): Readonly<TypeEffectivenessLevelCache> {
@@ -1397,7 +1516,8 @@ export class TypeEffectivenessCache {
   static readonly TYPE_DELIMITER = "|";
 
   private constructor(
-    readonly byADId: Readonly<Record<string, Readonly<TypeEffectiveness>>>
+    readonly byADId: Readonly<Record<string, Readonly<TypeEffectiveness>>>,
+    readonly defaultTypeEffectivenessLevel: Readonly<TypeEffectivenessLevel> | undefined
   ) {
     this.byADId = Object.freeze(byADId);
   }
@@ -1415,16 +1535,30 @@ export class TypeEffectivenessCache {
   ): Readonly<TypeEffectiveness> | undefined {
     return this.byADId[TypeEffectivenessCache.getADId(attacker, defender)];
   }
-  
+
+  private static selectDefaultTypeEffectivenessLevel(
+    findTel: (level: number) => Readonly<TypeEffectivenessLevel> | undefined,
+    allTels: readonly TypeEffectivenessLevel[]
+  ): Readonly<TypeEffectivenessLevel> | undefined {
+    const zero = findTel(0);
+    if (isDefined(zero)) {
+      return zero;
+    }
+
+    return allTels.find(tel => !tel.immunity);
+  }
+
   static fromArray(
-    typeEffectiveness: readonly TypeEffectiveness[]
+    typeEffectiveness: readonly TypeEffectiveness[],
+    findTel: (level: number) => Readonly<TypeEffectivenessLevel> | undefined,
+    allTels: readonly TypeEffectivenessLevel[]
   ): Readonly<TypeEffectivenessCache> {
     const byADId: Record<string, Readonly<TypeEffectiveness>> = {};
     typeEffectiveness.forEach(t => {
       byADId[TypeEffectivenessCache.getADId(t.attacker, t.defender)] = Object.freeze(t);
     });
-
-    return Object.freeze(new TypeEffectivenessCache(byADId));
+    const defaultTel = TypeEffectivenessCache.selectDefaultTypeEffectivenessLevel(findTel, allTels);
+    return Object.freeze(new TypeEffectivenessCache(byADId, defaultTel));
   }
 }
 
@@ -1448,7 +1582,7 @@ export class MoveItemCache {
   ): Readonly<Move> | undefined {
     return this.byItemId[item.id.toLowerCase()];
   }
-  
+
   static fromArray(
     items: readonly Item[],
     findMove: (id: string) => Move | undefined,
@@ -1544,20 +1678,63 @@ export class PokemonCache {
 
     return undefined;
   }
-  
+
   static fromArray(
     pokemon: Pokemon[]
   ): Readonly<PokemonCache> {
-    pokemon = pokemon.filter(isDefined);
     const byId: Record<number, Readonly<Pokemon>> = {};
     const bySpecies: Record<string, Readonly<Pokemon>> = {};
-    pokemon.forEach(p => {
+    pokemon.filter(isDefined).forEach(p => {
       p = Object.freeze(p);
       byId[p.id] = p;
       bySpecies[p.species.toLowerCase()] = p;
     });
 
     return Object.freeze(new PokemonCache(byId, bySpecies));
+  }
+}
+
+export class PokemonMovesCache {
+  private constructor(
+    readonly byId: Readonly<Record<number, Readonly<PokemonMoves>>>,
+    readonly bySpecies: Readonly<Record<string, Readonly<PokemonMoves>>>
+  ) {
+    this.byId = Object.freeze(byId);
+    this.bySpecies = Object.freeze(bySpecies);
+  }
+
+  findByIdOrSpecies(
+    id?: number,
+    species?: string
+  ): Readonly<PokemonMoves> | undefined {
+    if (isValidNumber(id)) {
+      const pokemonMoves = this.byId[id];
+      if (pokemonMoves) {
+        return pokemonMoves;
+      }
+    }
+
+    if (isString(species)) {
+      return this.bySpecies[species.toLowerCase()];
+    }
+
+    return undefined;
+  }
+
+  static fromArray(
+    pokemonMovesInfo: PokemonMovesInfo[]
+  ): Readonly<PokemonMovesCache> {
+    const byId: Record<number, Readonly<PokemonMoves>> = {};
+    const bySpecies: Record<string, Readonly<PokemonMoves>> = {};
+    pokemonMovesInfo.filter(isDefined).forEach(pmi => {
+      if (isString(pmi.pokemon)) {
+        bySpecies[pmi.pokemon.toLowerCase()] = pmi.moves;
+      } else {
+        byId[pmi.pokemon] = pmi.moves;
+      }
+    });
+
+    return Object.freeze(new PokemonMovesCache(byId, bySpecies));
   }
 }
 
@@ -1570,12 +1747,14 @@ interface IEvolutionStep {
 }
 
 export class EvolutionStep {
+  public readonly first: Readonly<EvolutionStep>;
+
   constructor(
     public readonly pokemon: Readonly<Pokemon>,
-    public readonly next: readonly Readonly<EvolutionStep>[] | undefined,
-    public readonly first: Readonly<Pokemon>
+    public readonly next: readonly Readonly<EvolutionStep>[], // empty = no more steps
+    first: Readonly<EvolutionStep> | undefined
   ) {
-    this.next = Object.freeze(next);
+    this.first = first ?? this;
   }
 }
 
@@ -1594,26 +1773,38 @@ export class EvolutionCache {
 
   private static buildChain(
     byId: Readonly<Record<number, IEvolutionStep>>,
-    byPokemon: Readonly<Record<number, EvolutionStep>>,
-    id: number,
-    first: Pokemon,
+    pokemon: Readonly<Pokemon>,
+    first: Readonly<EvolutionStep> | undefined,
     chainIds: readonly number[]
   ): Readonly<EvolutionStep> | undefined {
-    const info = byId[id];
-    if (chainIds.includes(id)) {
+    if (chainIds.includes(pokemon.id)) {
       return undefined;
     }
 
     const next: EvolutionStep[] = [];
-    info.steps.forEach(s => {
-      const step = EvolutionCache.buildChain(byId, byPokemon, s.pokemon.id, first, [...chainIds, id]);
-      if (!step) {
-        return undefined;
-      }
-      next.push(step);
-    });
+    const es = new EvolutionStep(pokemon, next, first);
+    const info = byId[pokemon.id];
+    if (info) {
+      info.steps.forEach(s => {
+        const step = EvolutionCache.buildChain(byId, s.pokemon, es.first, [...chainIds, pokemon.id]);
+        if (!step) {
+          return undefined;
+        }
 
-    return Object.freeze(new EvolutionStep(info.pokemon, isEmpty(next) ? undefined : next, first));
+        next.push(step);
+      });
+    }
+
+    Object.freeze(next);
+    return Object.freeze(es);
+  }
+
+  private static registerEvolutions(
+    byPokemon: Record<number, EvolutionStep>,
+    step: Readonly<EvolutionStep>
+  ) {
+    byPokemon[step.pokemon.id] = step;
+    step.next?.forEach(n => EvolutionCache.registerEvolutions(byPokemon, n));
   }
 
   static fromArray(
@@ -1636,8 +1827,11 @@ export class EvolutionCache {
 
     const byPokemon: Record<number, EvolutionStep> = {};
     const firsts = [...new Set<number>(Object.keys(byId).map(Number).filter(id => !references.has(id)))];
-    firsts.forEach(id => EvolutionCache.buildChain(byId, byPokemon, id, byId[id].pokemon, []));
-
+    firsts.map(id => byId[id].pokemon).map(p => EvolutionCache.buildChain(byId, p, undefined, [])).forEach(e => {
+      if (e) {
+        EvolutionCache.registerEvolutions(byPokemon, e);
+      }
+    });
     return Object.freeze(new EvolutionCache(byPokemon));
   }
 }
@@ -1652,7 +1846,7 @@ export class PaginationConfig {
     public readonly locations: number,
     public readonly abilities: number
   ) {}
-  
+
   static fromInterface(
     pc?: IPaginationConfig
   ): Readonly<PaginationConfig> {
@@ -1673,7 +1867,7 @@ export class Config {
     public readonly title: string,
     public readonly pageTitle: string
   ) {}
-  
+
   static fromInterface(
     c?: IConfig
   ): Readonly<Config> {
@@ -1719,7 +1913,8 @@ export class GameConfig {
     this.ignore = Object.freeze(ignore);
   }
 
-  isIgnored(
+  private static isIgnoredCache(
+    ignore: Readonly<Cache<readonly (string | number)[]>>,
     key: string,
     id: string | number
   ): boolean {
@@ -1728,17 +1923,24 @@ export class GameConfig {
     }
 
     if (isValidNumber(id)) {
-      return this.ignore.findById(key)?.includes(id) ?? false;
+      return ignore.findById(key)?.includes(id) ?? false;
     }
 
     if (isString(id)) {
-      return this.ignore.findById(key)?.includes(id.toLowerCase()) ?? false;
+      return ignore.findById(key)?.filter(isString).map(i => i.toLowerCase()).includes(id.toLowerCase()) ?? false;
     }
 
     return false;
   }
 
-  private static mapFilter<T, V extends ICacheId<V>>(
+  isIgnored(
+    key: string,
+    id: string | number
+  ): boolean {
+    return GameConfig.isIgnoredCache(this.ignore, key, id);
+  }
+
+  private static mapFilter<T, V extends IById<V>>(
     map: (t: T, s?: string) => V | undefined,
     data: T[] | undefined,
     namePrefixes: Readonly<Cache<string>>,
@@ -1750,10 +1952,20 @@ export class GameConfig {
   static fromInterface(
     gc?: IGameConfig
   ): Readonly<GameConfig> {
+    const ig = Cache.fromMap(gc?.ignore ?? {});
     const np = Cache.fromMap<string>(gc?.namePrefixes ?? {});
     const mcs = GameConfig.mapFilter(MoveCategory.fromInterface, gc?.moveCategories, np, "move_category");
     const mts = GameConfig.mapFilter(MoveTarget.fromInterface, gc?.moveTargets, np, "move_target");
-    const mets = GameConfig.mapFilter(MoveEffectType.fromInterface, gc?.moveEffectTypes, np, "move_effect_type");
+    const mets = CacheById.fromArray(
+      gc?.moveEffectTypes?.map(
+        t =>
+          MoveEffectType.fromInterface(
+            t,
+            id => GameConfig.isIgnoredCache(ig, "move_effect_type", id),
+            np.findById("move_effect_type")
+          )
+        ).filter(isDefined) ?? []
+    );
     const mfs = GameConfig.mapFilter(MoveFlag.fromInterface, gc?.moveFlags, np, "move_flag");
     const ics = GameConfig.mapFilter(ItemCategory.fromInterface, gc?.itemCategories, np, "item_category");
     const stats = GameConfig.mapFilter(Stat.fromInterface, gc?.stats, np, "stat");
@@ -1763,8 +1975,7 @@ export class GameConfig {
     const seasons = GameConfig.mapFilter(Season.fromInterface, gc?.seasons, np, "season");
     const rs = GameConfig.mapFilter(Region.fromInterface, gc?.regions, np, "region");
     const evms = GameConfig.mapFilter(EvolutionMethod.fromInterface, gc?.evolutionMethods, np, "evolution_method");
-    const ignore = Cache.fromMap(gc?.ignore ?? {});
 
-    return Object.freeze(new GameConfig(mcs, mts, mets, mfs, ics, stats, egs, enms, ts, seasons, rs, evms, np, ignore));
+    return Object.freeze(new GameConfig(mcs, mts, mets, mfs, ics, stats, egs, enms, ts, seasons, rs, evms, np, ig));
   }
 }

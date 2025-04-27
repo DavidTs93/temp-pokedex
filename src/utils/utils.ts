@@ -18,16 +18,10 @@ export function isAllDefined<T>(
   return !arr.some(isUndefined);
 }
 
-export function isNull(
-  x: any
-): x is null {
-  return x === null;
-}
-
 export function isObject(
   x: any
 ): x is object {
-  return !isNull(x) && typeof x === 'object';
+  return x !== null && typeof x === 'object';
 }
 
 export function isString(
@@ -127,7 +121,7 @@ export function isMap<T>(
   obj: any,
   isValidValue: (val: any) => val is T
 ): obj is Record<string, T> {
-  return (typeof obj === 'object' && !isNull(obj) && !Array.isArray(obj) && Object.values(obj).every(isValidValue));
+  return (typeof obj === 'object' && obj !== null && !Array.isArray(obj) && Object.values(obj).every(isValidValue));
 }
 
 export function hasPrefix(
@@ -162,25 +156,6 @@ export function normalizeName(
   prefix?: string
 ): string {
   return name ?? toName(replacement, prefix);
-}
-
-export function isValidCssColor(
-  color?: string
-): boolean {
-  if (!isString(color)) {
-    return false;
-  }
-
-  const el = document.createElement('div');
-  el.style.color = '';
-  el.style.color = color;
-  return el.style.color !== '';
-}
-
-export function validateColor(
-  color?: string
-): string | undefined {
-  return isValidCssColor(color) ? color : undefined;
 }
 
 /**
@@ -220,3 +195,12 @@ export function uniqueByEquals<T extends IEquals<T>>(
 
   return unique;
 }
+
+export function logError(
+  type: string,
+  data: any
+): void {
+  console.error(`Invalid ${type}: ${JSON.stringify(data)}`);
+  console.error(`-------------------------------------------`);
+}
+

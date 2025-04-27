@@ -8,8 +8,8 @@ const ItemsPage: React.FC = () => {
   const { gameData } = useGameData();
 
   // Get data from GameData
-  const itemsData = Object.values(gameData.items.byId);
-  const categories = Object.values(gameData.gameConfig.itemCategories.byId);
+  const itemsData = Object.values(gameData.items.byId).filter(i => !i.ignored);
+  const categories = Object.values(gameData.itemCategories.byId);
 
   // Create filter options
   const categoryOptions = [

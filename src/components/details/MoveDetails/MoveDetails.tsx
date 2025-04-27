@@ -29,21 +29,23 @@ const MoveDetails: React.FC<Move> = (move) => {
               )}
             </div>
           ))}
-          <div className={styles.categoryBadge}>
-            {move.category.name}
-          </div>
+          {move.category && (
+            <div className={styles.categoryBadge}>
+              {move.category.name}
+            </div>
+          )}
         </div>
       </div>
 
       <div className={styles.moveStats}>
         <div className={styles.statRow}>
           <span className={styles.statLabel}>Power:</span>
-          <span className={styles.statValue}>{move.power || '—'}</span>
+          <span className={styles.statValue}>{move.power || '?'}</span>
         </div>
 
         <div className={styles.statRow}>
           <span className={styles.statLabel}>Accuracy:</span>
-          <span className={styles.statValue}>{move.accuracy ? `${move.accuracy}%` : '—'}</span>
+          <span className={styles.statValue}>{move.isGuaranteed() ? '—' : `${move.accuracy}%`}</span>
         </div>
 
         <div className={styles.statRow}>
@@ -57,7 +59,7 @@ const MoveDetails: React.FC<Move> = (move) => {
         <p>{move.description}</p>
       </div>
 
-      {move.effect && (
+      {move.effect && !move.effect.effectType.ignored && (
         <>
           <div className={styles.moveEffect}>
             <h4>Effect Type</h4>
@@ -66,7 +68,7 @@ const MoveDetails: React.FC<Move> = (move) => {
 
           <div className={styles.moveEffectChance}>
             <h4>Effect Chance</h4>
-            <p>{move.effect.chance}%</p>
+            <p>{move.effect.isGuaranteed() ? '-' : `${move.effect.chance}%`}</p>
           </div>
         </>
       )}

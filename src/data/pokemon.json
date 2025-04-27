@@ -1,31 +1,29 @@
 [
   {
-    "id": 1,
     "species": "SPECIES_BULBASAUR",
     "types": ["TYPE_GRASS", "TYPE_POISON"],
     "abilities": ["ABILITY_OVERGROW", "ABILITY_NONE"],
     "stats": {
-      "hp": 45,
-      "attack": 49,
-      "defense": 49,
-      "specialAttack": 65,
-      "specialDefense": 65,
-      "speed": 45
+      "HP": 45,
+      "ATTACK": 49,
+      "DEFENSE": 49,
+      "SPECIAL_ATTACK": 65,
+      "SPECIAL_DEFENSE": 65,
+      "SPEED": 45
     },
     "eggGroups": ["EGG_GROUP_MONSTER", "EGG_GROUP_GRASS"]
   },
   {
-    "id": 2,
     "species": "SPECIES_IVYSAUR",
     "types": ["TYPE_GRASS", "TYPE_POISON"],
     "abilities": ["ABILITY_OVERGROW", "ABILITY_NONE"],
     "stats": {
-      "hp": 60,
-      "attack": 62,
-      "defense": 63,
-      "specialAttack": 80,
-      "specialDefense": 80,
-      "speed": 60
+      "HP": 60,
+      "ATTACK": 62,
+      "DEFENSE": 63,
+      "SPECIAL_ATTACK": 80,
+      "SPECIAL_DEFENSE": 80,
+      "SPEED": 60
     },
     "eggGroups": ["EGG_GROUP_MONSTER", "EGG_GROUP_GRASS"]
   }

@@ -28,10 +28,10 @@ const PokemonDetails: React.FC<PokemonDetailsProps> = ({
     <div className={styles.pokemonDetails}>
       <div className={styles.pokemonHeader}>
         <div className={styles.pokemonImage}>
-          {pokemon.spriteUrl && <img src={pokemon.spriteUrl} alt={pokemon.species} />}
+          {pokemon.spriteUrl && <img src={pokemon.spriteUrl} alt={pokemon.name} />}
         </div>
         <div className={styles.pokemonInfo}>
-          <h2>{pokemon.species}</h2>
+          <h2>{pokemon.name}</h2>
           <div className={styles.pokemonTypes}>
             {pokemon.types.map((type) => (
               <span
@@ -59,7 +59,7 @@ const PokemonDetails: React.FC<PokemonDetailsProps> = ({
         <div className={styles.detailSection}>
           <h3>Abilities</h3>
           <div className={styles.pokemonAbilities}>
-            {pokemon.abilities.map((ability) => (
+            {pokemon.abilities.filter(a => !a.ignored).map((ability) => (
               <span
                 key={ability.id}
                 className={`${styles.ability} ${onAbilityClick ? styles.clickable : ''}`}
@@ -75,7 +75,7 @@ const PokemonDetails: React.FC<PokemonDetailsProps> = ({
           <div className={styles.detailSection}>
             <h3>Moves</h3>
             <div className={styles.pokemonMoves}>
-              {pokemon.moves.levelUp.map((move) => (
+              {pokemon.moves.levelUp.filter(m => !m.move.ignored).map((move) => (
                 <span
                   key={move.move.id}
                   className={`${styles.move} ${onMoveClick ? styles.clickable : ''}`}

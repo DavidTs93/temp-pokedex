@@ -66,7 +66,7 @@ export function BaseDataPage<T extends { id: string | number; name?: string }>({
   const [searchValue, setSearchValue] = useState('');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  
+
   // Use the SortContext to manage sort state
   const { getSortState, setSortState } = useSort();
   const { column: sortColumn, direction: sortDirection } = getSortState(entityType);
@@ -74,14 +74,14 @@ export function BaseDataPage<T extends { id: string | number; name?: string }>({
   // Restore state from sessionStorage when component mounts
   useEffect(() => {
     if (!enableSessionStorage) return;
-    
+
     const savedSearchValue = sessionStorage.getItem(`${sessionStoragePrefix}SearchValue`);
     const savedActiveFilters = sessionStorage.getItem(`${sessionStoragePrefix}ActiveFilters`);
-    
+
     if (savedSearchValue) {
       setSearchValue(savedSearchValue);
     }
-    
+
     if (savedActiveFilters) {
       setActiveFilters(JSON.parse(savedActiveFilters));
     }
@@ -90,7 +90,7 @@ export function BaseDataPage<T extends { id: string | number; name?: string }>({
   // Save state to sessionStorage when it changes
   useEffect(() => {
     if (!enableSessionStorage) return;
-    
+
     sessionStorage.setItem(`${sessionStoragePrefix}SearchValue`, searchValue);
     sessionStorage.setItem(`${sessionStoragePrefix}ActiveFilters`, JSON.stringify(activeFilters));
   }, [searchValue, activeFilters, enableSessionStorage, sessionStoragePrefix]);
@@ -237,9 +237,6 @@ export function BaseDataPage<T extends { id: string | number; name?: string }>({
         isOpen={isOpen}
         onClose={closeModal}
         title={selectedItem?.name || `${title} Details`}
-        entityType={entityType}
-        entityId={selectedId || undefined}
-        enableDeepLinking={true}
       >
         {selectedItem && <DetailsComponent {...{ [entityType]: selectedItem } as any} />}
       </Modal>

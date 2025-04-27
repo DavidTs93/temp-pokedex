@@ -1,38 +1,45 @@
 [
   {
-    "id": "route1",
-    "name": "Route 1",
-    "description": "A peaceful route connecting two towns",
-    "region": "kanto",
+    "id": "MAPSEC_ROUTE_1",
+    "region": "KANTO",
     "pokemonEncounter": [
       {
-        "pokemon": 10,
-        "method": "walking",
+        "pokemon": 1,
+        "method": "WALKING",
+        "time": "DAWN",
         "chance": 100
       },
       {
-        "pokemon": 54,
-        "method": "swimming",
+        "pokemon": 1,
+        "method": "WALKING",
+        "time": "DAY",
         "chance": 100
       },
       {
-        "pokemon": 54,
-        "method": "fishing_good_rod",
+        "pokemon": 1,
+        "method": "WALKING",
+        "time": "DUSK",
         "chance": 100
       },
       {
-        "pokemon": 55,
-        "method": "fishing_super_rod",
-        "chance": 100
+        "pokemon": 1,
+        "method": "WALKING",
+        "time": "NIGHT",
+        "chance": 95
+      },
+      {
+        "pokemon": 2,
+        "method": "WALKING",
+        "time": "NIGHT",
+        "chance": 5
       }
     ],
-    "specialEncounters": [3],
     "wilderness": true
   },
   {
-    "id": "viridian",
-    "name": "Viridian City",
-    "region": "kanto",
+    "id": "MAPSEC_SAFFRON_CITY",
+    "region": "KANTO",
+    "specialEncounters": [1, 2],
     "wilderness": false
   }
 ]

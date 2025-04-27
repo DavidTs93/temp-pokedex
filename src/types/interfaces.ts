@@ -34,7 +34,7 @@ export interface IDataSpriteUrl {
 
 // From configs
 
-export interface IMoveCategory extends IDataId, Partial<IDataName> {}
+export interface IMoveCategory extends IDataId, Partial<IDataName & IDataColor & IDataSpriteUrl> {}
 
 export interface IMoveTarget extends IDataId, Partial<IDataName> {}
 
@@ -128,6 +128,11 @@ export interface IPokemonMoves {
   egg?: string[];
 }
 
+export interface IPokemonMovesInfo {
+  pokemon: number | string;
+  moves: IPokemonMoves;
+}
+
 export interface IPokemonHeldItem extends IDataChance {
   item: string;
 }
@@ -137,12 +142,11 @@ export interface IPokemonStats {
 }
 
 export interface IPokemon extends Partial<IDataName & IDataSpriteUrl> {
-  id: number;
   species: string;
   types: string[];
   abilities: string[];
   stats: IPokemonStats;
-  moves?: IPokemonMoves;
+  id?: number;
   heldItems?: IPokemonHeldItem[];
   eggGroups?: string[];
 }
@@ -215,4 +219,9 @@ export interface IGameConfig {
 
 // Cache
 
-export interface ICacheId<T extends ICacheId<T>> extends IDataId, IEquals<T> {}
+export interface IById<T extends IById<T>> extends IDataId, IEquals<T> {}
+
+export interface ICacheById<T extends IById<T>> {
+  byId: Readonly<Record<string, Readonly<T>>>;
+  findById: (id: string) => Readonly<T> | undefined;
+}

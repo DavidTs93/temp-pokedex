@@ -44,4 +44,4 @@ export const SortProvider: React.FC<SortProviderProps> = ({ children }) => {
       {children}
     </SortContext.Provider>
   );
-}; 
+};

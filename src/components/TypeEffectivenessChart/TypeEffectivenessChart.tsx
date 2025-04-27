@@ -21,7 +21,7 @@ const TypeEffectivenessChart: React.FC<TypeEffectivenessChartProps> = ({
 
   // Helper function to get effectiveness level between two types
   const getEffectivenessLevel = (attacker: Type, defender: Type): TypeEffectivenessLevel | undefined => {
-    return gameData.findTypeEffectivenessLevelsByTypes(attacker, defender);
+    return gameData.typeEffectiveness.findByAD(attacker, defender)?.level;
   };
 
   return (
@@ -80,4 +80,4 @@ const TypeEffectivenessChart: React.FC<TypeEffectivenessChartProps> = ({
   );
 };
 
-export default TypeEffectivenessChart; 
+export default TypeEffectivenessChart;

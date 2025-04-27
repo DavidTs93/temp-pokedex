@@ -1,19 +1,20 @@
 import React from 'react';
 import { GameDataProvider } from '../contexts/GameDataContext';
 import { GameData } from '../types/gameData';
-import { IAbility, ITypes, IMove, IItem, IPokemon, ILocation, IEvolution,
-  IConfig, IGameConfig } from '../types/interfaces';
+import { IAbility, ITypes, IMove, IItem, IPokemonMoves, IPokemonMovesInfo, IPokemon,
+  ILocation, IEvolution, IConfig, IGameConfig } from '../types/interfaces';
 
 // Import JSON files directly
 import configJson from '../data/config.json';
 import gameConfigJson from '../data/game.json';
-import typesJson from '../data/types.json';
-import pokemonJson from '../data/pokemon.json';
-import movesJson from '../data/moves.json';
 import abilitiesJson from '../data/abilities.json';
+import typesJson from '../data/types.json';
+import movesJson from '../data/moves.json';
 import itemsJson from '../data/items.json';
-import evolutionsJson from '../data/evolutions.json';
+import pokemonJson from '../data/pokemon.json';
+import pokemonMovesJson from '../data/pokemonMoves.json';
 import locationsJson from '../data/locations.json';
+import pokemonEvolutionsJson from '../data/pokemonEvolutions.json';
 
 // Type the imported data
 const configJsonData: IConfig = configJson;
@@ -23,8 +24,9 @@ const typesJsonData: ITypes = typesJson;
 const movesJsonData: IMove[] = movesJson;
 const itemsJsonData: IItem[] = itemsJson;
 const pokemonJsonData: IPokemon[] = pokemonJson;
+const pokemonMovesInfoJsonData: IPokemonMovesInfo[] = pokemonMovesJson;
 const locationsJsonData: ILocation[] = locationsJson;
-const evolutionsJsonData: IEvolution[] = evolutionsJson;
+const pokemonEvolutionsJsonData: IEvolution[] = pokemonEvolutionsJson;
 
 export const DataLoader: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   try {
@@ -37,9 +39,13 @@ export const DataLoader: React.FC<{ children: React.ReactNode }> = ({ children }
       itemsJsonData,
       undefined,
       pokemonJsonData,
+      pokemonMovesInfoJsonData,
       locationsJsonData,
-      evolutionsJsonData
+      pokemonEvolutionsJsonData
     );
+
+    // Set gameData on window for testing
+    (window as any).gameData = gameData;
 
     return (
       <GameDataProvider gameData={gameData} referenceGameData={undefined}>
@@ -50,4 +56,4 @@ export const DataLoader: React.FC<{ children: React.ReactNode }> = ({ children }
     console.error('Error loading game data:', err);
     return <div className="error">Error: {err instanceof Error ? err.message : 'Failed to load game data'}</div>;
   }
-}; 
+};

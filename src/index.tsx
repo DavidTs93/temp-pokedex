@@ -1,27 +1,28 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { GameDataProvider } from './contexts/GameDataContext';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { DataLoader } from "./components/DataLoader";
+import { GameDataProvider } from "./contexts/GameDataContext";
 
 // Create a global function to run the site
 export function runSite() {
   const root = ReactDOM.createRoot(
-    document.getElementById('root') as HTMLElement
+    document.getElementById("root") as HTMLElement,
   );
   root.render(
     <React.StrictMode>
-      <GameDataProvider>
+      <DataLoader>
         <App />
-      </GameDataProvider>
-    </React.StrictMode>
+      </DataLoader>
+    </React.StrictMode>,
   );
 }
 
 // Automatically start the app when the page loads
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', runSite);
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", runSite);
 } else {
   runSite();
 }

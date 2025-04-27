@@ -39,7 +39,7 @@ const LocationDetails: React.FC<Location> = (location) => {
                         {encounter.season.name}
                       </span>
                     )}
-                    <span>{encounter.chance}%</span>
+                    {encounter.chance && <span>{encounter.chance}%</span>}
                   </div>
                 </li>
               ))}
@@ -53,7 +53,7 @@ const LocationDetails: React.FC<Location> = (location) => {
           <h3>Special Encounters</h3>
           <div className={styles.pokemonList}>
             <ul>
-              {location.specialEncounters.map((pokemon) => (
+              {location.specialEncounters.filter(p => !p.ignored).map((pokemon) => (
                 <li key={pokemon.id}>
                   {pokemon.species}
                 </li>
@@ -68,7 +68,7 @@ const LocationDetails: React.FC<Location> = (location) => {
           <h3>Available Items</h3>
           <div className={styles.itemsList}>
             <ul>
-              {location.items.map((item) => (
+              {location.items.filter(i => !i.ignored).map((item) => (
                 <li key={item.id}>{item.name}</li>
               ))}
             </ul>

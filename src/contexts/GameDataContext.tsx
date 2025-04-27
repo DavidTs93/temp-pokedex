@@ -14,10 +14,10 @@ interface GameDataProviderProps {
   referenceGameData?: GameData;
 }
 
-export const GameDataProvider: React.FC<GameDataProviderProps> = ({ 
-  children, 
+export const GameDataProvider: React.FC<GameDataProviderProps> = ({
+  children,
   gameData,
-  referenceGameData 
+  referenceGameData
 }) => {
   return (
     <GameDataContext.Provider value={{ gameData, referenceGameData }}>

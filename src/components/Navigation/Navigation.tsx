@@ -1,45 +1,46 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styles from './Navigation.module.css';
-
+import { useGameData } from '../../contexts/GameDataContext';
 const Navigation: React.FC = () => {
   const location = useLocation();
+  const { gameData } = useGameData();
 
   return (
     <nav className={styles.navigation}>
       <div className={styles.navContent}>
         <Link to="/" className={styles.navLogo}>
           <img src="/logo.png" alt="Pokédex Logo" />
-          <h1>Pokédex</h1>
+          <h1>{gameData.config.title}</h1>
         </Link>
         <div className={styles.navLinks}>
           <Link
-            to="/pokemon"
-            className={`${styles.navLink} ${location.pathname.startsWith('/pokemon') ? styles.active : ''}`}
+            to={`?page=pokemon`}
+            className={`${styles.navLink} ${location.search.includes('page=pokemon') ? styles.active : ''}`}
           >
             Pokémon
           </Link>
           <Link
-            to="/moves"
-            className={`${styles.navLink} ${location.pathname.startsWith('/moves') ? styles.active : ''}`}
+            to={`?page=moves`}
+            className={`${styles.navLink} ${location.search.includes('page=moves') ? styles.active : ''}`}
           >
             Moves
           </Link>
           <Link
-            to="/items"
-            className={`${styles.navLink} ${location.pathname.startsWith('/items') ? styles.active : ''}`}
+            to={`?page=items`}
+            className={`${styles.navLink} ${location.search.includes('page=items') ? styles.active : ''}`}
           >
             Items
           </Link>
           <Link
-            to="/locations"
-            className={`${styles.navLink} ${location.pathname.startsWith('/locations') ? styles.active : ''}`}
+            to={`?page=locations`}
+            className={`${styles.navLink} ${location.search.includes('page=locations') ? styles.active : ''}`}
           >
             Locations
           </Link>
           <Link
-            to="/abilities"
-            className={`${styles.navLink} ${location.pathname.startsWith('/abilities') ? styles.active : ''}`}
+            to={`?page=abilities`}
+            className={`${styles.navLink} ${location.search.includes('page=abilities') ? styles.active : ''}`}
           >
             Abilities
           </Link>

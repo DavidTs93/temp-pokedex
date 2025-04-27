@@ -1,83 +1,79 @@
 {
   "stats": [
-    { "id": "hp", "name": "HP", "abbreviation": "HP" },
-    { "id": "attack", "abbreviation": "Atk" },
-    { "id": "defense" },
-    { "id": "special_attack" },
-    { "id": "special_defense" },
-    { "id": "speed" }
+    { "id": "HP", "name": "HP", "abbreviation": "HP" },
+    { "id": "ATTACK", "abbreviation": "Atk" },
+    { "id": "DEFENSE" },
+    { "id": "SPECIAL_ATTACK" },
+    { "id": "SPECIAL_DEFENSE" },
+    { "id": "SPEED" }
   ],
   "times": [
-    { "id": "day", "name": "Day", "color": "#F8D030" },
-    { "id": "night", "name": "Night", "color": "#7038F8" },
-    { "id": "dawn", "name": "Dawn", "color": "#F5AC78" },
-    { "id": "dusk", "name": "Dusk", "color": "#B97A57" }
+    { "id": "DAY", "color": "#F8D030" },
+    { "id": "NIGHT", "color": "#7038F8" },
+    { "id": "DAWN", "color": "#F5AC78" },
+    { "id": "DUSK", "color": "#B97A57" }
   ],
   "seasons": [
-    { "id": "spring", "name": "Spring", "color": "#98FB98" },
-    { "id": "summer", "name": "Summer", "color": "#FFA500" },
-    { "id": "autumn", "name": "Autumn", "color": "#D2691E" },
-    { "id": "winter", "name": "Winter", "color": "#87CEEB" }
+    { "id": "SPRING", "color": "#98FB98" },
+    { "id": "SUMMER", "color": "#FFA500" },
+    { "id": "AUTUMN", "color": "#D2691E" },
+    { "id": "WINTER", "color": "#87CEEB" }
   ],
   "moveCategories": [
-    { "id": "physical", "name": "Physical" },
-    { "id": "special", "name": "Special" },
-    { "id": "status", "name": "Status" }
+    { "id": "PHYSICAL" },
+    { "id": "SPECIAL" },
+    { "id": "STATUS" }
   ],
   "itemCategories": [
-    { "id": "key", "name": "Key Items" },
-    { "id": "ball", "name": "Poké Balls" },
-    { "id": "battle", "name": "Battle Items" },
-    { "id": "berry", "name": "Berries" },
-    { "id": "medicine", "name": "Medicine" },
-    { "id": "tm", "name": "TMs & HMs" },
-    { "id": "misc", "name": "Miscellaneous" }
+    { "id": "POCKET_POKE_BALLS", "name": "Poké Balls" },
+    { "id": "POCKET_TM_HM", "name": "TMs & HMs" }
   ],
   "encounterMethods": [
-    { "id": "standard", "name": "Standard", "color": "#A8A878" },
-    { "id": "fishing", "name": "Fishing", "color": "#6890F0" },
-    { "id": "surfing", "name": "Surfing", "color": "#98D8D8" },
-    { "id": "headbutt", "name": "Headbutt", "color": "#F08030" },
-    { "id": "rock_smash", "name": "Rock Smash", "color": "#C03028" }
+    { "id": "STANDARD", "color": "#A8A878" },
+    { "id": "FISHING", "color": "#6890F0" },
+    { "id": "SURFING", "color": "#98D8D8" },
+    { "id": "HEADBUTT", "color": "#F08030" },
+    { "id": "ROCK_SMASH", "color": "#C03028" }
   ],
   "regions": [
-    { "id": "kanto", "name": "Kanto" },
-    { "id": "johto", "name": "Johto" },
-    { "id": "hoenn", "name": "Hoenn" },
-    { "id": "sinnoh", "name": "Sinnoh" },
-    { "id": "unova", "name": "Unova" },
-    { "id": "kalos", "name": "Kalos" },
-    { "id": "alola", "name": "Alola" },
-    { "id": "galar", "name": "Galar" },
-    { "id": "paldea", "name": "Paldea" }
+    { "id": "KANTO" },
+    { "id": "JOHTO" },
+    { "id": "HOENN" },
+    { "id": "SINNOH" },
+    { "id": "UNOVA" },
+    { "id": "KALOS" },
+    { "id": "ALOLA" },
+    { "id": "GALAR" },
+    { "id": "PALDEA" }
   ],
   "genders": [
-    { "id": "male", "name": "♂", "color": "#0000FF" },
-    { "id": "female", "name": "♀", "color": "#FF00FF" }
+    { "id": "MALE", "name": "♂", "color": "#0000FF" },
+    { "id": "FEMALE", "name": "♀", "color": "#FF00FF" }
   ],
   "evolutionMethods": [
-    { "id": "level", "valueType": "number" },
-    { "id": "useItem", "valueType": "string" },
-    { "id": "heldItem", "valueType": "string" },
-    { "id": "trade", "valueType": "boolean" },
-    { "id": "gender", "valueType": "string" },
-    { "id": "time", "valueType": "string" },
-    { "id": "move", "valueType": "string" },
-    { "id": "season", "valueType": "string" },
-    { "id": "location", "valueType": "string" },
-    { "id": "partner", "valueType": "number |string" },
-    { "id": "region", "valueType": "string" },
-    { "id": "friendship", "valueType": "boolean" },
-    { "id": "friendshipCompare", "valueType": "comparison" },
-    { "id": "attackDefenseCompare", "valueType": "comparison" }
+    { "id": "LEVEL", "valueType": "number" },
+    { "id": "USE_ITEM", "valueType": "string" },
+    { "id": "HELD_ITEM", "valueType": "string" },
+    { "id": "TRADE", "valueType": "boolean" },
+    { "id": "GENDER", "valueType": "string" },
+    { "id": "TIME", "valueType": "string" },
+    { "id": "MOVE", "valueType": "string" },
+    { "id": "SEASON", "valueType": "string" },
+    { "id": "LOCATION", "valueType": "string" },
+    { "id": "PARTNER", "valueType": "number |string" },
+    { "id": "REGION", "valueType": "string" },
+    { "id": "FRIENDSHIP", "valueType": "boolean" },
+    { "id": "FRIENDSHIP_COMPARE", "valueType": "comparison" },
+    { "id": "ATTACK_DEFENSE_COMPARE", "valueType": "comparison" }
   ],
   "namePrefixes": {
-    "ability": "ABILITY_",
+    "ABILITY": "ABILITY_",
     "type": "TYPE_",
     "move_effect_type": "EFFECT_",
     "move_target": "MOVE_TARGET_",
     "move_flag": "FLAG_",
     "move": "MOVE_",
+    "item_category": "POCKET_",
     "item": "ITEM_",
     "item_move_tm": "ITEM_TM_",
     "item_move_hm": "ITEM_HM_",

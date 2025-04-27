@@ -1,18 +1,20 @@
 [
   {
-    "id": "MOVE_POUND",
+    "id": "MOVE_TACKLE",
     "types": ["TYPE_NORMAL"],
-    "category": "physical",
-    "power": 40,
-    "accuracy": 100,
+    "category": "PHYSICAL",
+    "power": 35,
+    "accuracy": 95,
     "pp": 35,
+    "effectType": "EFFECT_HIT",
+    "effectChance": 0,
     "target": "MOVE_TARGET_SELECTED",
     "flags": ["FLAG_MAKES_CONTACT", "FLAG_PROTECT_AFFECTED", "FLAG_MIRROR_MOVE_AFFECTED", "FLAG_KINGS_ROCK_AFFECTED"]
   },
   {
     "id": "MOVE_BLIZZARD",
     "types": ["TYPE_ICE"],
-    "category": "special",
+    "category": "SPECIAL",
     "power": 120,
     "accuracy": 70,
     "pp": 5,

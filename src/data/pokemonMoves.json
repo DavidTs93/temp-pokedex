@@ -1,0 +1,13 @@
+[
+  {
+    "pokemon": 1,
+    "moves": {
+      "levelUp": [
+        {
+          "move": "MOVE_TACKLE",
+          "level": 1
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,37 @@
+
+.abilityDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.abilityHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.abilityName {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1.5rem;
+}
+
+.detailSection {
+  background-color: var(--bg-secondary);
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.detailSection h3 {
+  margin-top: 0;
+  color: var(--text-primary);
+}
+
+.detailSection p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}

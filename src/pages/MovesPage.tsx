@@ -8,7 +8,7 @@ const MovesPage: React.FC = () => {
   const { gameData } = useGameData();
 
   // Get data from GameData
-  const movesData = Object.values(gameData.moves.byId);
+  const movesData = Object.values(gameData.moves.byId).filter(m => !m.ignored);
   const types = Object.values(gameData.types.byId);
   const categories = Object.values(gameData.gameConfig.moveCategories.byId);
 
@@ -41,28 +41,23 @@ const MovesPage: React.FC = () => {
     },
     {
       header: 'Split',
-      accessor: ((move: Move) => move.category.name) as unknown as keyof Move,
+      accessor: ((move: Move) => move.category?.name) as unknown as keyof Move,
       width: '7%',
       sortable: true
     },
     { header: 'Power', accessor: 'power' as keyof Move, width: '8%', sortable: true },
     {
       header: 'Acc.',
-      accessor: ((move: Move) => {
-        const acc = move.accuracy;
-        return (acc <= 0 || acc >= 100) ? '—' : acc;
-      }) as unknown as keyof Move,
+      accessor: ((move: Move) => move.isGuaranteed() ? '—' : move.accuracy) as unknown as keyof Move,
       width: '7%',
       sortable: true,
-      sortValue: (move: Move) => {
-        return move.accuracy <= 0 || move.accuracy >= 100 ? 101 : move.accuracy;
-      }
+      sortValue: (move: Move) => move.accuracy
     },
     { header: 'PP', accessor: 'pp' as keyof Move, width: '6%', sortable: true },
     {
       header: 'Effect',
       accessor: ((move: Move) => {
-        if (!move.effect) return '';
+        if (!move.effect || move.effect.effectType.ignored) return '';
         return move.effect.effectType.name;
       }) as unknown as keyof Move,
       width: '12%',
@@ -71,15 +66,12 @@ const MovesPage: React.FC = () => {
     {
       header: 'Effect%',
       accessor: ((move: Move) => {
-        const chance = move.effect?.chance;
-        return !chance ? '' : (chance <= 0 || chance >= 100 ? '—' : chance);
+        if (!move.effect) return '';
+        return move.effect.isGuaranteed() ? '-' : move.effect.chance;
       }) as unknown as keyof Move,
       width: '9%',
       sortable: true,
-      sortValue: (move: Move) => {
-        const chance = move.effect?.chance;
-        return !chance ? 0 : (chance <= 0 || chance >= 100 ? 101 : chance);
-      }
+      sortValue: (move: Move) => !move.effect ? 0 : move.effect.chance
     },
     { header: 'Description', accessor: 'description' as keyof Move, width: '25%', sortable: true }
   ];
