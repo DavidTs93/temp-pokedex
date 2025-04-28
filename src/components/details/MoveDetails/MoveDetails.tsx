@@ -1,5 +1,5 @@
 import React from 'react';
-import { Move } from '../../../types/classes';
+import { Move, MoveEffect } from '../../../types/classes';
 import styles from './MoveDetails.module.css';
 
 const MoveDetails: React.FC<Move> = (move) => {
@@ -45,7 +45,9 @@ const MoveDetails: React.FC<Move> = (move) => {
 
         <div className={styles.statRow}>
           <span className={styles.statLabel}>Accuracy:</span>
-          <span className={styles.statValue}>{move.isGuaranteed() ? '—' : `${move.accuracy}%`}</span>
+          <span className={styles.statValue}>
+            {move.accuracy === Move.GUARANTEED_ACCURACY ? '—' : `${move.accuracy}%`}
+          </span>
         </div>
 
         <div className={styles.statRow}>
@@ -68,7 +70,7 @@ const MoveDetails: React.FC<Move> = (move) => {
 
           <div className={styles.moveEffectChance}>
             <h4>Effect Chance</h4>
-            <p>{move.effect.isGuaranteed() ? '-' : `${move.effect.chance}%`}</p>
+            <p>{move.effect.chance === MoveEffect.GUARANTEED_CHANCE ? '-' : `${move.effect.chance}%`}</p>
           </div>
         </>
       )}

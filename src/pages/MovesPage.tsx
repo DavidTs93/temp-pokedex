@@ -1,5 +1,5 @@
 import React from 'react';
-import { Move, Type } from '../types/classes';
+import { Move, Type, MoveEffect } from '../types/classes';
 import { MoveDetails } from '../components/Details';
 import { useGameData } from '../contexts/GameDataContext';
 import { BaseDataPage, Column } from '../components/BaseDataPage';
@@ -48,7 +48,9 @@ const MovesPage: React.FC = () => {
     { header: 'Power', accessor: 'power' as keyof Move, width: '8%', sortable: true },
     {
       header: 'Acc.',
-      accessor: ((move: Move) => move.isGuaranteed() ? '—' : move.accuracy) as unknown as keyof Move,
+      accessor: ((move: Move) =>
+        move.accuracy === Move.GUARANTEED_ACCURACY ? '—' : move.accuracy
+      ) as unknown as keyof Move,
       width: '7%',
       sortable: true,
       sortValue: (move: Move) => move.accuracy
@@ -67,7 +69,7 @@ const MovesPage: React.FC = () => {
       header: 'Effect%',
       accessor: ((move: Move) => {
         if (!move.effect) return '';
-        return move.effect.isGuaranteed() ? '-' : move.effect.chance;
+        return move.effect.chance === MoveEffect.GUARANTEED_CHANCE ? '-' : move.effect.chance;
       }) as unknown as keyof Move,
       width: '9%',
       sortable: true,

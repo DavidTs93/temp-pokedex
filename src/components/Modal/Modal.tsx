@@ -4,17 +4,23 @@ import styles from './Modal.module.css';
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onCloseAll?: () => void;
   children: React.ReactNode;
   title?: string;
+  isStacked?: boolean;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, title }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onCloseAll, children, title, isStacked }) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose();
+        if (onCloseAll) {
+          onCloseAll();
+        } else {
+          onClose();
+        }
       }
     };
 
@@ -27,12 +33,12 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, title }) => {
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, onCloseAll]);
 
   if (!isOpen) return null;
 
   return (
-    <div className={styles.modalOverlay} onClick={onClose}>
+    <div className={`${styles.modalOverlay} ${isStacked ? styles.modalStacked : ''}`} onClick={onClose}>
       <div
         className={styles.modalContent}
         onClick={e => e.stopPropagation()}

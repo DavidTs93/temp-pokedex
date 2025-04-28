@@ -6,7 +6,9 @@ import { filterData } from '../utils/filter';
 import { paginateData } from '../utils/pagination';
 import { useModal } from '../hooks/useModal';
 import { useSort } from '../contexts/SortContext';
+import { useGameData } from '../contexts/GameDataContext';
 import styles from '../styles/App.module.css';
+
 export interface Column<T> {
   header: string;
   accessor: ((item: T) => any) | keyof T;
@@ -63,6 +65,7 @@ export function BaseDataPage<T extends { id: string | number; name?: string }>({
   sessionStoragePrefix = entityType,
   filterLabel = 'Filters'
 }: BaseDataPageProps<T>) {
+  const { gameData } = useGameData();
   const [searchValue, setSearchValue] = useState('');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -181,19 +184,11 @@ export function BaseDataPage<T extends { id: string | number; name?: string }>({
   };
 
   // Modal state
-  const { isOpen, selectedId, openModal, closeModal } = useModal({
-    entityType,
-    enableDeepLinking: true
-  });
-
-  // Find the selected item
-  const selectedItem = selectedId
-    ? data.find((item: T) => item.id === selectedId)
-    : null;
+  const { isOpen, selectedItem, modalStack, openModal, closeModal, closeAllModals } = useModal<T>();
 
   // Handle row click
   const handleRowClick = (item: T) => {
-    openModal(item.id);
+    openModal(item);
   };
 
   return (
@@ -233,13 +228,23 @@ export function BaseDataPage<T extends { id: string | number; name?: string }>({
         enableSorting={enableSorting}
       />
 
-      <Modal
-        isOpen={isOpen}
-        onClose={closeModal}
-        title={selectedItem?.name || `${title} Details`}
-      >
-        {selectedItem && <DetailsComponent {...{ [entityType]: selectedItem } as any} />}
-      </Modal>
+      {/* Render all modals in the stack */}
+      {modalStack.map((modal, index) => (
+        <Modal
+          key={`${modal.item.id}-${index}`}
+          isOpen={modal.isOpen}
+          onClose={() => {
+            if (index === modalStack.length - 1) {
+              closeModal();
+            }
+          }}
+          onCloseAll={closeAllModals}
+          title={selectedItem?.name || `${title} Details`}
+          isStacked={index > 0}
+        >
+          {selectedItem && <DetailsComponent {...selectedItem} />}
+        </Modal>
+      ))}
     </div>
   );
 }

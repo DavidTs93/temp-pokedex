@@ -591,10 +591,6 @@ export class MoveEffect {
     this.effectType = Object.freeze(effectType);
   }
 
-  isGuaranteed(): boolean {
-    return this.chance === MoveEffect.GUARANTEED_CHANCE;
-  }
-
   equals(other: MoveEffect): boolean {
     return this.effectType.equals(other.effectType) && this.chance === other.chance;
   }
@@ -643,10 +639,6 @@ export class Move {
     this.target = Object.freeze(target);
     this.effect = Object.freeze(effect);
     this.flags = Object.freeze(flags);
-  }
-
-  isGuaranteed(): boolean {
-    return this.accuracy === Move.GUARANTEED_ACCURACY;
   }
 
   equals(other: Move): boolean {

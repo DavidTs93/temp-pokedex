@@ -22,25 +22,17 @@ const VALID_PAGES = Object.keys(PAGE_COMPONENTS);
 const MainPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState<string>('pokedex');
+  const [currentPage, setCurrentPage] = useState<string>('pokemon');
 
   // Parse the query parameter to determine the current page
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const pageParam = params.get('page');
-
-    if (pageParam) {
-      // Check if the page parameter is valid
-      if (VALID_PAGES.includes(pageParam)) {
-        setCurrentPage(pageParam);
-      } else {
-        // If the page parameter is invalid, redirect to the pokemon page
-        console.log(`Invalid page parameter: ${pageParam}. Redirecting to pokemon.`);
-        navigate('?page=pokemon', { replace: true });
-      }
+    if (!pageParam || !VALID_PAGES.includes(pageParam)) {
+      params.set('page', 'pokemon');
+      navigate(`?${params.toString()}`, { replace: true });
     } else {
-      // If no page parameter is provided, set it to 'pokemon' and update the URL
-      navigate('?page=pokemon', { replace: true });
+      setCurrentPage(pageParam);
     }
   }, [location.search, navigate]);
 
