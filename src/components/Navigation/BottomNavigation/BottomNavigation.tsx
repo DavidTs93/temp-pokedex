@@ -1,5 +1,5 @@
 import React from 'react';
-import ThemeToggle from '../ThemeToggle/ThemeToggle';
+import ThemeToggle from './ThemeToggle/ThemeToggle';
 import { ScrollToTopButton } from './ScrollToTopButton/ScrollToTopButton';
 import styles from './BottomNavigation.module.css';
 

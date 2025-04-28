@@ -2,31 +2,31 @@
   {
     "id": "ITEM_MASTER_BALL",
     "category": "POCKET_POKE_BALLS",
-    "spriteUrl": "/sprites/items/pokeball/masterball.png"
+    "sprite": "/sprites/items/pokeball/masterball.png"
   },
   {
     "id": "ITEM_CHERI_BERRY",
     "category": "POCKET_BERRIES",
-    "spriteUrl": "/sprites/items/berry/cherriberry.png"
+    "sprite": "/sprites/items/berry/cherriberry.png"
   },
   {
     "id": "ITEM_POTION",
     "category": "POCKET_MEDICINE",
-    "spriteUrl": "/sprites/items/medicine/potion.png"
+    "sprite": "/sprites/items/medicine/potion.png"
   },
   {
     "id": "ITEM_HP_UP",
     "category": "POCKET_MEDICINE",
-    "spriteUrl": "/sprites/items/vitamin/hpup.png"
+    "sprite": "/sprites/items/vitamin/hpup.png"
   },
   {
     "id": "ITEM_GUARD_SPEC",
     "category": "POCKET_ITEMS",
-    "spriteUrl": "/sprites/items/battle/guardspec.png"
+    "sprite": "/sprites/items/battle/guardspec.png"
   },
   {
     "id": "ITEM_TM01",
     "category": "POCKET_TM_HM",
-    "spriteUrl": "/sprites/items/tmhm/tm01.png"
+    "sprite": "/sprites/items/tmhm/tm01.png"
   }
 ]

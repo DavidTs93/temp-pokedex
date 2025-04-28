@@ -6,7 +6,7 @@ import { filterData } from '../utils/filter';
 import { paginateData } from '../utils/pagination';
 import { useModal } from '../hooks/useModal';
 import { useSort } from '../contexts/SortContext';
-
+import styles from '../styles/App.module.css';
 export interface Column<T> {
   header: string;
   accessor: ((item: T) => any) | keyof T;
@@ -197,10 +197,10 @@ export function BaseDataPage<T extends { id: string | number; name?: string }>({
   };
 
   return (
-    <div className="page-container">
-      <div className="page-header">
-        <h1 className="page-title">{title}</h1>
-        <p className="page-description">{description}</p>
+    <div className={styles.pageContainer}>
+      <div className={styles.pageHeader}>
+        <h1 className={styles.pageTitle}>{title}</h1>
+        <p className={styles.pageDescription}>{description}</p>
       </div>
 
       <SearchAndFilter

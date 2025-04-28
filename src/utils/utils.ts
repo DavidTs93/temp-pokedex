@@ -96,10 +96,17 @@ export function isNotEmpty<T>(
   return !isEmpty(arr);
 }
 
+export function isArrayType<T>(
+  x: any,
+  isType: (val: any) => val is T
+): x is T[] {
+  return Array.isArray(x) && x.every(isType);
+}
+
 export function isStringArray(
   x: any
 ): x is string[] {
-  return Array.isArray(x) && x.every(isString);
+  return isArrayType(x, isString);
 }
 
 export function isOptionalStringArray(
@@ -117,11 +124,11 @@ export function isInt(
   return isValidNumber(x) && Number.isInteger(x);
 }
 
-export function isMap<T>(
+export function isMapValueType<T>(
   obj: any,
-  isValidValue: (val: any) => val is T
-): obj is Record<string, T> {
-  return (typeof obj === 'object' && obj !== null && !Array.isArray(obj) && Object.values(obj).every(isValidValue));
+  isType: (val: any) => val is T
+): obj is Record<any, T> {
+  return (isObject(obj) && obj !== null && !Array.isArray(obj) && Object.values(obj).every(isType));
 }
 
 export function hasPrefix(

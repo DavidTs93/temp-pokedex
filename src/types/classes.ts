@@ -5,8 +5,8 @@ import { IMoveCategory, IMoveTarget, IMoveEffectType, IMoveFlag, IItemCategory, 
   IEvolutionComparison, IEvolution, IPaginationConfig, IConfig, IGameConfig, IById } from "./interfaces";
 import { isUndefined, isDefined, isAllDefined, isString, isOptionalString, isNumber, isValidNumber,
   isOptionalValidNumber, isStringOrValidNumber, isOptionalStringOrValidNumber, isBoolean, isOptionalBoolean,
-  isStringArray, isOptionalStringArray, isInt, isMap, hasPrefix, noPrefix, normalizeName, isEmpty, isNotEmpty,
-  validateNotNegative, validateNotGuaranteed, isEquals, uniqueByEquals, logError } from "../utils/utils";
+  isStringArray, isOptionalStringArray, isInt, isMapValueType, hasPrefix, noPrefix, normalizeName, isEmpty, isNotEmpty,
+  validateNotNegative, validateNotGuaranteed, isEquals, uniqueByEquals } from "../utils/utils";
 
 // From configs
 
@@ -15,7 +15,7 @@ export class MoveCategory {
     public readonly id: string,
     public readonly name: string,
     public readonly color?: string,
-    public readonly spriteUrl?: string
+    public readonly sprite?: string
   ) {}
 
   equals(other: MoveCategory): boolean {
@@ -27,13 +27,12 @@ export class MoveCategory {
     prefix?: string
   ): Readonly<MoveCategory> | undefined {
     if (!moveCategory || !isString(moveCategory.id) || !isOptionalString(moveCategory.name) ||
-      !isOptionalString(moveCategory.color) || !isOptionalString(moveCategory.spriteUrl)) {
-      logError("move category", moveCategory);
+      !isOptionalString(moveCategory.color) || !isOptionalString(moveCategory.sprite)) {
       return undefined;
     }
 
     const name = normalizeName(moveCategory.name, moveCategory.id, prefix);
-    return Object.freeze(new MoveCategory(moveCategory.id, name, moveCategory.color, moveCategory.spriteUrl));
+    return Object.freeze(new MoveCategory(moveCategory.id, name, moveCategory.color, moveCategory.sprite));
   }
 }
 
@@ -60,7 +59,6 @@ export class MoveTarget {
     prefix?: string
   ): Readonly<MoveTarget> | undefined {
     if (!moveTarget ||!isString(moveTarget.id) || !isOptionalString(moveTarget.name)) {
-      logError("move target", moveTarget);
       return undefined;
     }
 
@@ -95,7 +93,6 @@ export class MoveEffectType {
     prefix?: string
   ): Readonly<MoveEffectType> | undefined {
     if (!moveEffectType || !isString(moveEffectType.id) || !isOptionalString(moveEffectType.name)) {
-      logError("move effect type", moveEffectType);
       return undefined;
     }
 
@@ -127,7 +124,6 @@ export class MoveFlag {
     prefix?: string
   ): Readonly<MoveFlag> | undefined {
     if (!moveFlag || !isString(moveFlag.id) || !isOptionalString(moveFlag.name)) {
-      logError("move flag", moveFlag);
       return undefined;
     }
 
@@ -159,7 +155,6 @@ export class ItemCategory {
     prefix?: string
   ): Readonly<ItemCategory> | undefined {
     if (!itemCategory || !isString(itemCategory.id) || !isOptionalString(itemCategory.name)) {
-      logError("item category", itemCategory);
       return undefined;
     }
 
@@ -189,11 +184,11 @@ export class Stat {
 
     const nameWords = name.split(' ');
     if (nameWords.length === 1) {
-      return nameWords[0].slice(0, 2);
+      return nameWords[0].slice(0, 3);
     }
 
     if (nameWords.length === 2) {
-      return nameWords[0].slice(0, 1) + nameWords[1].slice(0, 1);
+      return nameWords[0].slice(0, 2) + nameWords[1].slice(0, 1);
     }
 
     return nameWords.map(word => word[0]).join('');
@@ -204,7 +199,6 @@ export class Stat {
     prefix?: string
   ): Readonly<Stat> | undefined {
     if (!stat || !isString(stat.id) || !isOptionalString(stat.name) || !isOptionalString(stat.abbreviation)) {
-      logError("stat", stat);
       return undefined;
     }
 
@@ -237,7 +231,6 @@ export class EggGroup {
     prefix?: string
   ): Readonly<EggGroup> | undefined {
     if (!eggGroup || !isString(eggGroup.id) || !isOptionalString(eggGroup.name)) {
-      logError("egg group", eggGroup);
       return undefined;
     }
 
@@ -251,7 +244,7 @@ export class EncounterMethod {
     public readonly id: string,
     public readonly name: string,
     public readonly color?: string,
-    public readonly spriteUrl?: string
+    public readonly sprite?: string
   ) {}
 
   equals(other: EncounterMethod): boolean {
@@ -263,13 +256,12 @@ export class EncounterMethod {
     prefix?: string
   ): Readonly<EncounterMethod> | undefined {
     if (!encounterMethod || !isString(encounterMethod.id) || !isOptionalString(encounterMethod.name) ||
-      !isOptionalString(encounterMethod.color) || !isOptionalString(encounterMethod.spriteUrl)) {
-      logError("encounter method", encounterMethod);
+      !isOptionalString(encounterMethod.color) || !isOptionalString(encounterMethod.sprite)) {
       return undefined;
     }
 
     const name = normalizeName(encounterMethod.name, encounterMethod.id, prefix);
-    return Object.freeze(new EncounterMethod(encounterMethod.id, name, encounterMethod.color, encounterMethod.spriteUrl));
+    return Object.freeze(new EncounterMethod(encounterMethod.id, name, encounterMethod.color, encounterMethod.sprite));
   }
 }
 
@@ -278,7 +270,7 @@ export class Time {
     public readonly id: string,
     public readonly name: string,
     public readonly color?: string,
-    public readonly spriteUrl?: string
+    public readonly sprite?: string
   ) {}
 
   equals(other: Time): boolean {
@@ -290,13 +282,12 @@ export class Time {
     prefix?: string
   ): Readonly<Time> | undefined {
     if (!time || !isString(time.id) || !isOptionalString(time.name) ||
-      !isOptionalString(time.color) || !isOptionalString(time.spriteUrl)) {
-      logError("time", time);
+      !isOptionalString(time.color) || !isOptionalString(time.sprite)) {
       return undefined;
     }
 
     const name = normalizeName(time.name, time.id, prefix);
-    return Object.freeze(new Time(time.id, name, time.color, time.spriteUrl));
+    return Object.freeze(new Time(time.id, name, time.color, time.sprite));
   }
 }
 
@@ -305,7 +296,7 @@ export class Season {
     public readonly id: string,
     public readonly name: string,
     public readonly color?: string,
-    public readonly spriteUrl?: string
+    public readonly sprite?: string
   ) {}
 
   equals(other: Season): boolean {
@@ -317,13 +308,12 @@ export class Season {
     prefix?: string
   ): Readonly<Season> | undefined {
     if (!season || !isString(season.id) || !isOptionalString(season.name) ||
-      !isOptionalString(season.color) || !isOptionalString(season.spriteUrl)) {
-      logError("season", season);
+      !isOptionalString(season.color) || !isOptionalString(season.sprite)) {
       return undefined;
     }
 
     const name = normalizeName(season.name, season.id, prefix);
-    return Object.freeze(new Season(season.id, name, season.color, season.spriteUrl));
+    return Object.freeze(new Season(season.id, name, season.color, season.sprite));
   }
 }
 
@@ -342,7 +332,6 @@ export class Region {
     prefix?: string
   ): Readonly<Region> | undefined {
     if (!region || !isString(region.id) || !isOptionalString(region.name)) {
-      logError("region", region);
       return undefined;
     }
 
@@ -356,7 +345,7 @@ export class EvolutionMethod {
     public readonly id: string,
     public readonly name: string,
     public readonly valueTypes: readonly ((obj: any) => EvolutionComparison | undefined)[],
-    public readonly spriteUrl?: string
+    public readonly sprite?: string
   ) {
     this.valueTypes = Object.freeze(valueTypes);
   }
@@ -370,8 +359,7 @@ export class EvolutionMethod {
     prefix?: string
   ): Readonly<EvolutionMethod> | undefined {
     if (!evolutionMethod || !isString(evolutionMethod.id) || !isOptionalString(evolutionMethod.name) ||
-      !isString(evolutionMethod.valueType) || !isOptionalString(evolutionMethod.spriteUrl)) {
-      logError("evolution method 1", evolutionMethod);
+      !isString(evolutionMethod.valueType) || !isOptionalString(evolutionMethod.sprite)) {
       return undefined;
     }
 
@@ -391,12 +379,11 @@ export class EvolutionMethod {
       }
     }))];
     if (isEmpty(valueTypes) || !isAllDefined(valueTypes)) {
-      logError("evolution method 2", evolutionMethod);
       return undefined;
     }
 
     const name = normalizeName(evolutionMethod.name, evolutionMethod.id, prefix);
-    return Object.freeze(new EvolutionMethod(evolutionMethod.id, name, valueTypes, evolutionMethod.spriteUrl));
+    return Object.freeze(new EvolutionMethod(evolutionMethod.id, name, valueTypes, evolutionMethod.sprite));
   }
 }
 
@@ -446,7 +433,7 @@ export class Type {
     public readonly id: string,
     public readonly name: string,
     public readonly color?: string,
-    public readonly spriteUrl?: string
+    public readonly sprite?: string
   ) {}
 
   equals(other: Type): boolean {
@@ -458,13 +445,12 @@ export class Type {
     prefix?: string
   ): Readonly<Type> | undefined {
     if (!type || !isString(type.id) || !isOptionalString(type.name) ||
-      !isOptionalString(type.color) || !isOptionalString(type.spriteUrl)) {
-      logError("type", type);
+      !isOptionalString(type.color) || !isOptionalString(type.sprite)) {
       return undefined;
     }
 
     const name = normalizeName(type.name, type.id, prefix);
-    return Object.freeze(new Type(type.id, name, type.color, type.spriteUrl));
+    return Object.freeze(new Type(type.id, name, type.color, type.sprite));
   }
 }
 
@@ -506,7 +492,6 @@ export class TypeEffectivenessLevel {
     if (!typeEffectivenessLevel || !isInt(typeEffectivenessLevel.level) ||
       !isOptionalStringOrValidNumber(typeEffectivenessLevel.multiplier) ||
       !isOptionalBoolean(typeEffectivenessLevel.immunity) || !isOptionalString(typeEffectivenessLevel.color)) {
-      logError("type effectiveness level", typeEffectivenessLevel);
       return undefined;
     }
 
@@ -540,7 +525,6 @@ export class TypeEffectiveness {
   ): Readonly<TypeEffectiveness> | undefined {
     if (!typeEffectiveness || !findType || !findTel || !isString(typeEffectiveness.attacker) ||
       !isString(typeEffectiveness.defender) || !isValidNumber(typeEffectiveness.level)) {
-      logError("type effectiveness 1", typeEffectiveness);
       return undefined;
     }
 
@@ -548,7 +532,6 @@ export class TypeEffectiveness {
     const defender = findType(typeEffectiveness.defender);
     const tel = findTel(typeEffectiveness.level);
     if (!attacker || !defender || !tel) {
-      logError("type effectiveness 2", typeEffectiveness);
       return undefined;
     }
 
@@ -622,13 +605,11 @@ export class MoveEffect {
     findMet: (id: string) => MoveEffectType | undefined
   ): Readonly<MoveEffect> | undefined {
     if (!isString(moveEffectType) || !isOptionalValidNumber(moveEffectChance) || !findMet) {
-      logError("move effect 1", moveEffectType);
       return undefined;
     }
 
     const effectType = findMet(moveEffectType);
     if (!effectType) {
-      logError("move effect 2", moveEffectType);
       return undefined;
     }
 
@@ -655,7 +636,7 @@ export class Move {
     public readonly effect?: Readonly<MoveEffect>,
     public readonly flags?: readonly Readonly<MoveFlag>[], // not empty, unique
     public readonly description?: string,
-    public readonly spriteUrl?: string
+    public readonly sprite?: string
   ) {
     this.types = Object.freeze(types);
     this.category = Object.freeze(category);
@@ -687,8 +668,7 @@ export class Move {
       !isOptionalValidNumber(move.accuracy) || !isOptionalValidNumber(move.priority) ||
       !isInt(move.pp) || move.pp < 0 || !isString(move.target) || !isOptionalValidNumber(move.power) ||
       !isOptionalString(move.effectType) || !isOptionalValidNumber(move.effectChance) ||
-      !isOptionalStringArray(move.flags) || !isOptionalString(move.description) || !isOptionalString(move.spriteUrl)) {
-      logError("move 1", move);
+      !isOptionalStringArray(move.flags) || !isOptionalString(move.description) || !isOptionalString(move.sprite)) {
       return undefined;
     }
 
@@ -699,7 +679,6 @@ export class Move {
       MoveEffect.fromInterface(move.effectType, move.effectChance, findMet) : undefined;
     const flags = move.flags?.map(findMf);
     if (!isAllDefined(types) || isEmpty(types) || (findMc && !category) || !target || (flags && !isAllDefined(flags))) {
-      logError("move 2", move);
       return undefined;
     }
 
@@ -711,7 +690,7 @@ export class Move {
     const power = validateNotNegative(move.power);
     const uf = isNotEmpty(flags) ? uniqueByEquals(flags) : undefined;
     return Object.freeze(new Move(move.id, name, ut, accuracy, priority, move.pp, target,
-      ignored, category, power, effect, uf, move.description, move.spriteUrl));
+      ignored, category, power, effect, uf, move.description, move.sprite));
   }
 }
 
@@ -725,7 +704,7 @@ export class Item {
     public readonly ignored: boolean,
     public readonly possibleMove?: string,
     public readonly description?: string,
-    public readonly spriteUrl?: string
+    public readonly sprite?: string
   ) {
     this.category = Object.freeze(category);
   }
@@ -743,14 +722,12 @@ export class Item {
   ): Readonly<Item> | undefined {
     if (!item || !findIc || !isString(item.id) || !isOptionalString(item.name) || !isString(item.category) ||
       !isOptionalString(item.itemId) || !isOptionalString(item.move) ||
-      !isOptionalString(item.description) || !isOptionalString(item.spriteUrl)) {
-      logError("item 1", item);
+      !isOptionalString(item.description) || !isOptionalString(item.sprite)) {
       return undefined;
     }
 
     const category = findIc(item.category);
     if (!category) {
-      logError("item 2", item);
       return undefined;
     }
 
@@ -758,7 +735,7 @@ export class Item {
     const name = normalizeName(item.name, id, prefix);
     const ignored = !!isIgnoredItem?.(id);
     const possibleMove = item.move ?? noPrefix(item.id, itemMovePrefixes?.find(prefix => hasPrefix(item.id, prefix)));
-    return Object.freeze(new Item(id, name, category, ignored, possibleMove, item.description, item.spriteUrl));
+    return Object.freeze(new Item(id, name, category, ignored, possibleMove, item.description, item.sprite));
   }
 }
 
@@ -781,13 +758,11 @@ export class PokemonLevelUpMove {
     findMove: (id: string) => Move | undefined
   ): Readonly<PokemonLevelUpMove> | undefined {
     if (!pokemonLevelUpMove || !findMove || !isString(pokemonLevelUpMove.move) || !isInt(pokemonLevelUpMove.level)) {
-      logError("pokemon level up move 1", pokemonLevelUpMove);
       return undefined;
     }
 
     const move = findMove(pokemonLevelUpMove.move);
     if (!move) {
-      logError("pokemon level up move 2", pokemonLevelUpMove);
       return undefined;
     }
 
@@ -815,19 +790,16 @@ export class PokemonItemMove {
     findMoveItem: (id: Move) => Item | undefined
   ): Readonly<PokemonItemMove> | undefined {
     if (!pokemonItemMove || !findMove || !findMoveItem || !isString(pokemonItemMove)) {
-      logError("pokemon item move 1", pokemonItemMove);
       return undefined;
     }
 
     const move = findMove(pokemonItemMove);
     if (!move) {
-      logError("pokemon item move 2", pokemonItemMove);
       return undefined;
     }
 
     const item = findMoveItem(move);
     if (!item) {
-      logError("pokemon item move 3", pokemonItemMove);
       return undefined;
     }
 
@@ -857,7 +829,6 @@ export class PokemonMoves {
     if (!pokemonMoves || !findMove || !findMoveItem ||
       !isOptionalStringArray(pokemonMoves.item) || !isOptionalStringArray(pokemonMoves.tutor) ||
       !isOptionalStringArray(pokemonMoves.egg)) {
-      logError("pokemon moves 1", pokemonMoves);
       return undefined;
     }
 
@@ -867,7 +838,6 @@ export class PokemonMoves {
     const egg = pokemonMoves.egg?.map(findMove);
     if ((levelUp && !isAllDefined(levelUp)) || (item && !isAllDefined(item)) ||
       (tutor && !isAllDefined(tutor)) || (egg && !isAllDefined(egg))) {
-      logError("pokemon moves 2", pokemonMoves);
       return undefined;
     }
 
@@ -876,7 +846,6 @@ export class PokemonMoves {
     const tu = isNotEmpty(tutor) ? uniqueByEquals(tutor) : undefined;
     const eu = isNotEmpty(egg) ? uniqueByEquals(egg) : undefined;
     if (!ulu && !iu && !tu && !eu) {
-      logError("pokemon moves 3", pokemonMoves);
       return undefined;
     }
 
@@ -900,13 +869,11 @@ export class PokemonMovesInfo {
     findMoveItem: (id: Move) => Item | undefined
   ): Readonly<PokemonMovesInfo> | undefined {
     if (!isStringOrValidNumber(pokemonMoves.pokemon) || !pokemonMoves.moves) {
-      logError("pokemon moves info 1", pokemonMoves);
       return undefined;
     }
 
     const pms = PokemonMoves.fromInterface(pokemonMoves.moves, findMove, findMoveItem);
     if (!pms) {
-      logError("pokemon moves info 2", pokemonMoves);
       return undefined;
     }
 
@@ -934,13 +901,11 @@ export class PokemonHeldItem {
   ): Readonly<PokemonHeldItem> | undefined {
     if (!pokemonHeldItem || !findItem || !isString(pokemonHeldItem.item) ||
       !isOptionalValidNumber(pokemonHeldItem.chance)) {
-      logError("pokemon held item 1", pokemonHeldItem);
       return undefined;
     }
 
     const item = findItem(pokemonHeldItem.item);
     if (!item) {
-      logError("pokemon held item 2", pokemonHeldItem);
       return undefined;
     }
 
@@ -967,13 +932,11 @@ export class PokemonStat {
     findStat: (id: string) => Stat | undefined
   ): Readonly<PokemonStat> | undefined {
     if (!isString(stat) || !isValidNumber(value) || value < 0 || !findStat) {
-      logError("pokemon stat 1", stat);
       return undefined;
     }
 
     const s = findStat(stat);
     if (!s) {
-      logError("pokemon stat 2", stat);
       return undefined;
     }
 
@@ -994,8 +957,7 @@ export class PokemonStats {
     findStat: (id: string) => Stat | undefined,
     allStats: readonly Stat[]
   ): Readonly<PokemonStats> | undefined {
-    if (!pokemonStats || !findStat || !allStats || !isMap(pokemonStats, isValidNumber)) {
-      logError("pokemon stats 1", pokemonStats);
+    if (!pokemonStats || !findStat || !allStats || !isMapValueType(pokemonStats, isValidNumber)) {
       return undefined;
     }
 
@@ -1003,7 +965,6 @@ export class PokemonStats {
     Object.entries(pokemonStats).map(([stat, value]) => PokemonStat.fromInterface(stat, value, findStat)).
       filter(isDefined).forEach(s => ps[s.stat.id] = s);
     if (Object.keys(ps).length !== allStats.length) {
-      logError("pokemon stats 2", pokemonStats);
       return undefined;
     }
 
@@ -1024,7 +985,7 @@ export class Pokemon {
     public readonly moves?: Readonly<PokemonMoves>,
     public readonly heldItems?: readonly Readonly<PokemonHeldItem>[], // not empty, unique
     public readonly eggGroups?: readonly Readonly<EggGroup>[], // not empty, unique
-    public readonly spriteUrl?: string
+    public readonly sprite?: string
   ) {
     this.types = Object.freeze(types);
     this.abilities = Object.freeze(abilities);
@@ -1054,20 +1015,17 @@ export class Pokemon {
     if (!pokemon || !findType || !findAbility || !findStat || !allStats ||
       !findItem || !findEggGroup || !isString(pokemon.species) || !isOptionalString(pokemon.name) ||
       !isStringArray(pokemon.types) || !isStringArray(pokemon.abilities) ||
-      !isOptionalStringArray(pokemon.eggGroups) || !isOptionalString(pokemon.spriteUrl)) {
-      logError("pokemon 1", pokemon);
+      !isOptionalStringArray(pokemon.eggGroups) || !isOptionalString(pokemon.sprite)) {
       return undefined;
     }
 
     const id = pokemon.id ?? optionalId;
     if (!isInt(id) || id <= 0) {
-      logError("pokemon 2", pokemon);
       return undefined;
     }
 
     // Number species not supported
     if (isValidNumber(Number(pokemon.species))) {
-      logError("pokemon 3", pokemon);
       return undefined;
     }
 
@@ -1079,7 +1037,6 @@ export class Pokemon {
     const eggGroups = pokemon.eggGroups?.map(findEggGroup);
     if (isEmpty(types) || !isAllDefined(types) || isEmpty(abilities) || !isAllDefined(abilities) ||
       !stats || (heldItems && !isAllDefined(heldItems)) || (eggGroups && !isAllDefined(eggGroups))) {
-      logError("pokemon 4", pokemon);
       return undefined;
     }
 
@@ -1090,7 +1047,7 @@ export class Pokemon {
     const uhi = heldItems && uniqueByEquals(heldItems);
     const ueg = eggGroups && uniqueByEquals(eggGroups);
     return Object.freeze(new Pokemon(id, pokemon.species, name, ut, ua, stats,
-      ignored, moves, uhi, ueg, pokemon.spriteUrl));
+      ignored, moves, uhi, ueg, pokemon.sprite));
   }
 }
 
@@ -1126,7 +1083,6 @@ export class PokemonEncounter {
       !isStringOrValidNumber(pokemonEncounter.pokemon) || !isString(pokemonEncounter.method) ||
       (isDefined(pokemonEncounter.chance) && !validateNotGuaranteed(pokemonEncounter.chance)) ||
       !isOptionalString(pokemonEncounter.time) || !isOptionalString(pokemonEncounter.season)) {
-      logError("pokemon encounter 1", pokemonEncounter);
       return undefined;
     }
 
@@ -1136,7 +1092,6 @@ export class PokemonEncounter {
     const season = isString(pokemonEncounter.season) ? findSeason(pokemonEncounter.season) : undefined;
     if (!pokemon || !method || (isString(pokemonEncounter.time) && !time) ||
       (isString(pokemonEncounter.season) && !season)) {
-      logError("pokemon encounter 2", pokemonEncounter);
       return undefined;
     }
 
@@ -1179,7 +1134,6 @@ export class Location {
       !isString(location.id) || !isOptionalString(location.name) ||
       !isOptionalBoolean(location.wilderness) || !isOptionalString(location.region) ||
       !isOptionalStringArray(location.items) || !isOptionalString(location.description)) {
-      logError("location 1", location);
       return undefined;
     }
 
@@ -1192,7 +1146,6 @@ export class Location {
     const items = location.items?.map(findItem);
     if ((isString(location.region) && !region) || (pokemonEncounters && !isAllDefined(pokemonEncounters)) ||
       (specialEncounters && !isAllDefined(specialEncounters)) || (items && !isAllDefined(items))) {
-      logError("location 2", location);
       return undefined;
     }
 
@@ -1241,7 +1194,6 @@ export class EvolutionComparison {
   ): Readonly<EvolutionComparison> | undefined {
     if (!comparison || (!isStringOrValidNumber(comparison.first) && !isBoolean(comparison.first)) ||
       (!isOptionalStringOrValidNumber(comparison.second) && !isOptionalBoolean(comparison.second))) {
-      logError("evolution comparison", comparison);
       return undefined;
     }
 
@@ -1270,19 +1222,16 @@ export class EvolutionRequirement {
     findEvolutionMethod: (id: string) => EvolutionMethod | undefined
   ): Readonly<EvolutionRequirement> | undefined {
     if (!isString(method) || isUndefined(value) || !findEvolutionMethod) {
-      logError("evolution requirement 1", method);
       return undefined;
     }
 
     const m = findEvolutionMethod(method);
     if (!m) {
-      logError("evolution requirement 2", method);
       return undefined;
     }
 
     const comparison = m.valueTypes.map(cmp => cmp(value)).find(isDefined);
     if (!comparison) {
-      logError("evolution requirement 3", method);
       return undefined;
     }
 
@@ -1310,22 +1259,19 @@ export class Evolution {
     findEvolutionMethod: (id: string) => EvolutionMethod | undefined
   ): Readonly<Evolution> | undefined {
     if (!evolution || !findPokemon || !findEvolutionMethod || !isStringOrValidNumber(evolution.pokemon) ||
-      !isStringOrValidNumber(evolution.evolution) || !isMap(evolution.requirements, isDefined)) {
-      logError("evolution 1", evolution);
+      !isStringOrValidNumber(evolution.evolution) || !isMapValueType(evolution.requirements, isDefined)) {
       return undefined;
     }
 
     const pokemon = findPokemon(evolution.pokemon);
     const evolutionPokemon = findPokemon(evolution.evolution);
     if (!pokemon || !evolutionPokemon) {
-      logError("evolution 2", evolution);
       return undefined;
     }
 
     const requirements = Object.entries(evolution.requirements).
       map(([key, value]) => EvolutionRequirement.fromInterface(key, value, findEvolutionMethod));
     if (!isAllDefined(requirements)) {
-      logError("evolution 3", evolution);
       return undefined;
     }
 
@@ -1861,22 +1807,24 @@ export class PaginationConfig {
 
 export class Config {
   private constructor(
-    public readonly pagination: Readonly<PaginationConfig>,
     public readonly version: string,
     public readonly language: string,
     public readonly title: string,
-    public readonly pageTitle: string
+    public readonly pageTitle: string,
+    public readonly pagination: Readonly<PaginationConfig>,
+    public readonly logo?: string
   ) {}
 
   static fromInterface(
     c?: IConfig
   ): Readonly<Config> {
-    const pagination = PaginationConfig.fromInterface(c?.pagination);
     const version = c?.version ?? "1.0.0";
     const language = c?.language ?? "en";
     const title = c?.title ?? "Pokédex";
     const pageTitle = c?.pageTitle ?? "Custom Pokédex";
-    return Object.freeze(new Config(pagination, version, language, title, pageTitle));
+    const pagination = PaginationConfig.fromInterface(c?.pagination);
+    const logo = c?.logo;
+    return Object.freeze(new Config(version, language, title, pageTitle, pagination, logo));
   }
 }
 

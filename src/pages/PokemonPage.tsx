@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pokemon, Type, Ability, EggGroup } from '../types/classes';
-import { PokemonDetails } from '../components/details';
+import { PokemonDetails } from '../components/Details';
 import { useGameData } from '../contexts/GameDataContext';
 import { BaseDataPage, Column } from '../components/BaseDataPage';
 
@@ -33,12 +33,19 @@ const PokemonPage: React.FC = () => {
   // Table columns
   const columns: Column<Pokemon>[] = [
     { header: 'ID', accessor: 'id' as keyof Pokemon, width: '6%', sortable: true },
-    { header: 'Name', accessor: 'name' as keyof Pokemon, width: '28%', sortable: true },
+    {
+      header: 'Name',
+      accessor: ((pokemon: Pokemon) => pokemon) as unknown as keyof Pokemon,
+      width: '28%',
+      sortable: true,
+      sortValue: (pokemon: Pokemon) => pokemon.name
+    },
     {
       header: 'Types',
-      accessor: ((pokemon: Pokemon) => pokemon.types.map(t => t.name).join(', ')) as unknown as keyof Pokemon,
+      accessor: ((pokemon: Pokemon) => pokemon.types) as unknown as keyof Pokemon,
       width: '10%',
-      sortable: true
+      sortable: true,
+      sortValue: (pokemon: Pokemon) => pokemon.types.map(t => t.name).join(' ')
     },
     {
       header: 'Abilities',
@@ -48,7 +55,7 @@ const PokemonPage: React.FC = () => {
       sortable: true
     },
     ...stats.map(stat => ({
-      header: stat.name,
+      header: stat.abbreviation,
       accessor: ((pokemon: Pokemon) => pokemon.stats.stats.findById(stat.id)?.value) as unknown as keyof Pokemon,
       width: '6.5%',
       sortable: true

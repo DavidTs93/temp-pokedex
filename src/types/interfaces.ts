@@ -28,13 +28,13 @@ export interface IDataColor {
   color: string;
 }
 
-export interface IDataSpriteUrl {
-  spriteUrl: string;
+export interface IDatasprite {
+  sprite: string;
 }
 
 // From configs
 
-export interface IMoveCategory extends IDataId, Partial<IDataName & IDataColor & IDataSpriteUrl> {}
+export interface IMoveCategory extends IDataId, Partial<IDataName & IDataColor & IDatasprite> {}
 
 export interface IMoveTarget extends IDataId, Partial<IDataName> {}
 
@@ -50,15 +50,15 @@ export interface IStat extends IDataId, Partial<IDataName> {
 
 export interface IEggGroup extends IDataId, Partial<IDataName> {}
 
-export interface IEncounterMethod extends IDataId, Partial<IDataName & IDataColor & IDataSpriteUrl> {}
+export interface IEncounterMethod extends IDataId, Partial<IDataName & IDataColor & IDatasprite> {}
 
-export interface ITime extends IDataId, Partial<IDataName & IDataColor & IDataSpriteUrl> {}
+export interface ITime extends IDataId, Partial<IDataName & IDataColor & IDatasprite> {}
 
-export interface ISeason extends IDataId, Partial<IDataName & IDataColor & IDataSpriteUrl> {}
+export interface ISeason extends IDataId, Partial<IDataName & IDataColor & IDatasprite> {}
 
 export interface IRegion extends IDataId, Partial<IDataName> {}
 
-export interface IEvolutionMethod extends IDataId, Partial<IDataName & IDataSpriteUrl> {
+export interface IEvolutionMethod extends IDataId, Partial<IDataName & IDatasprite> {
   valueType: string;
 }
 
@@ -68,7 +68,7 @@ export interface IAbility extends IDataId, Partial<IDataName & IDataDescription>
 
 // Type
 
-export interface IType extends IDataId, Partial<IDataName & IDataDescription & IDataColor & IDataSpriteUrl> {}
+export interface IType extends IDataId, Partial<IDataName & IDataDescription & IDataColor & IDatasprite> {}
 
 export interface ITypeEffectivenessLevel extends IDataLevel, Partial<IDataColor> {
   multiplier?: string | number;
@@ -89,7 +89,7 @@ export interface ITypes {
 
 // Move
 
-export interface IMove extends IDataId, Partial<IDataName & IDataDescription & IDataSpriteUrl> {
+export interface IMove extends IDataId, Partial<IDataName & IDataDescription & IDatasprite> {
   types: string[];
   category: string;
   pp: number;
@@ -104,7 +104,7 @@ export interface IMove extends IDataId, Partial<IDataName & IDataDescription & I
 
 // Item
 
-export interface IItem extends IDataId, Partial<IDataName & IDataDescription & IDataSpriteUrl> {
+export interface IItem extends IDataId, Partial<IDataName & IDataDescription & IDatasprite> {
   category: string;
   itemId?: string;
   move?: string;
@@ -141,7 +141,7 @@ export interface IPokemonStats {
   [key: string]: number;
 }
 
-export interface IPokemon extends Partial<IDataName & IDataSpriteUrl> {
+export interface IPokemon extends Partial<IDataName & IDatasprite> {
   species: string;
   types: string[];
   abilities: string[];
@@ -198,6 +198,7 @@ export interface IConfig {
   title: string;
   pageTitle: string;
   pagination: IPaginationConfig;
+  logo?: string;
 }
 
 export interface IGameConfig {

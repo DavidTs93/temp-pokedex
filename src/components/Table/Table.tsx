@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useGameData } from '../../contexts/GameDataContext';
 import { useNavigate } from 'react-router-dom';
 import styles from './Table.module.css';
-import typeStyles from './Types.module.css';
+import { isArrayType, isObject } from '../../utils/utils';
+import { Pokemon, Type } from '../../types/classes';
 
 export interface Column<T> {
   header: string;
@@ -108,29 +109,86 @@ export function Table<T>({
 
   // Render cell content
   const renderCell = (item: T, column: Column<T>) => {
-    const value = typeof column.accessor === 'function'
-      ? (column.accessor as (item: T) => any)(item)
-      : item[column.accessor as keyof T];
-
-    // Special handling for types
-    if (Array.isArray(value) && value.length > 0 && typeof value[0] === 'object' && 'name' in value[0]) {
+    if (typeof column.accessor === 'function') {
       return (
-        <div className={typeStyles.typeContainer}>
-          {value.map((type: any, index: number) => (
-            <span key={index} className={`${typeStyles.typeBadge} ${typeStyles[type.name.toLowerCase()]}`}>
+        <div>
+          {renderCellContent((column.accessor as (item: T) => any)(item))}
+        </div>
+      );
+    } else {
+      return (
+        <div className={column.accessor === 'name' ? styles.objectName : ''}>
+          {renderCellContent(item[column.accessor as keyof T])}
+        </div>
+      );
+    }
+  };
+
+  type Info<T> = {
+    isType: (val: any) => val is T,
+    className: string,
+    render: (val: T, index: number) => React.ReactNode
+  }
+
+  function renderCellInfo<V>(value: V): Info<V> | undefined {
+    if (Array.isArray(value)) {
+      return undefined;
+    }
+
+    if (value instanceof Type) {
+      return {
+        isType: (val: any): val is Type => val instanceof Type,
+        className: styles.typeContainer,
+        render: (type: Type, index: number) => (
+          type.sprite ?
+            <img key={index} src={type.sprite} alt={type.name} className={styles.typeSprite} /> :
+            <span key={index} className={styles.typeBadge} style={{ backgroundColor: type.color }}>
               {type.name}
             </span>
-          ))}
+        )
+      } as unknown as Info<V>;
+    }
+
+    if (value instanceof Pokemon) {
+      return {
+        isType: (val: any): val is Pokemon => val instanceof Pokemon,
+        className: styles.typeContainer,
+        render: (pokemon: Pokemon, index: number) =>
+          <div key={index} className={styles.pokemonContainer}>
+            {pokemon.sprite && <img src={pokemon.sprite} alt={pokemon.name} className={styles.pokemonSprite} />}
+            <span className={styles.objectName}>{pokemon.name}</span>
+          </div>
+      } as unknown as Info<V>;
+    }
+
+    return undefined;
+  };
+
+  function renderCellContent<V>(value: any) {
+    if (Array.isArray(value)) {
+      if (value.length === 0) {
+        return '';
+      }
+
+      let info: Info<V> | undefined = renderCellInfo(value[0]);
+      if (info && !isArrayType(value, info.isType)) {
+        info = undefined;
+      }
+
+      return (
+        <div className={info?.className}>
+          {value.map(info ? info.render : val => val)}
         </div>
       );
     }
 
-    // Default rendering
-    if (Array.isArray(value)) {
-      return value.join(', ');
+    const info: Info<V> | undefined = renderCellInfo(value);
+    if (info) {
+      return (
+        info.render(value, 0)
+      );
     }
-
-    if (typeof value === 'object' && value !== null) {
+    if (value !== null && isObject(value)) {
       return JSON.stringify(value);
     }
 
@@ -227,7 +285,7 @@ export function Table<T>({
                 className={onRowClick ? styles.clickable : ''}
               >
                 {columns.map((column, colIndex) => (
-                  <td key={colIndex}>{renderCell(item, column)}</td>
+                  <td className={styles.tdContent} key={colIndex}>{renderCell(item, column)}</td>
                 ))}
               </tr>
             ))}

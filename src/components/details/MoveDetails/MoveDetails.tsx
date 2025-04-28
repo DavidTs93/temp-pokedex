@@ -6,9 +6,9 @@ const MoveDetails: React.FC<Move> = (move) => {
   return (
     <div className={styles.moveDetails}>
       <div className={styles.moveHeader}>
-        {move.spriteUrl && (
+        {move.sprite && (
           <div className={styles.moveImage}>
-            <img src={move.spriteUrl} alt={move.name} />
+            <img src={move.sprite} alt={move.name} />
           </div>
         )}
         <h3 className={styles.moveName}>{move.name}</h3>
@@ -18,12 +18,12 @@ const MoveDetails: React.FC<Move> = (move) => {
               key={type.id}
               className={styles.typeBadge}
               style={{
-                backgroundColor: type.spriteUrl ? 'transparent' : type.color,
-                padding: type.spriteUrl ? '0' : undefined
+                backgroundColor: type.sprite ? 'transparent' : type.color,
+                padding: type.sprite ? '0' : undefined
               }}
             >
-              {type.spriteUrl ? (
-                <img src={type.spriteUrl} alt={type.name} className={styles.typeSprite} />
+              {type.sprite ? (
+                <img src={type.sprite} alt={type.name} className={styles.typeSprite} />
               ) : (
                 type.name
               )}

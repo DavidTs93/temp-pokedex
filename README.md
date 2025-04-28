@@ -232,7 +232,7 @@ Each type in the game has an `effectiveness` array that defines how effective th
   "name": "Fire",
   "color": "#F08030",
   "description": "Fire-type moves are powerful and can cause burns.",
-  "spriteUrl": "/assets/types/fire.png",
+  "sprite": "/assets/types/fire.png",
   "effectiveness": [
     { "type": "fire", "level": -1 },
     { "type": "water", "level": -1 },
@@ -250,7 +250,7 @@ In this example:
 - Fire-type moves are resisted by Fire, Water, Rock, and Dragon types
 - Fire-type moves are super effective against Grass, Ice, Bug, and Steel types
 - All other types take normal damage from Fire-type moves
-- The `spriteUrl` property provides a path to the type's sprite image, which will be used instead of the name + color if present
+- The `sprite` property provides a path to the type's sprite image, which will be used instead of the name + color if present
 
 ### Calculating Damage
 

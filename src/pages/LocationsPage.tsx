@@ -1,6 +1,6 @@
 import React from 'react';
 import { Location } from '../types/classes';
-import { LocationDetails } from '../components/details';
+import { LocationDetails } from '../components/Details';
 import { useGameData } from '../contexts/GameDataContext';
 import { BaseDataPage, Column } from '../components/BaseDataPage';
 

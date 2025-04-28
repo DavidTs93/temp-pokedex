@@ -13,14 +13,32 @@
 
 .dataTable th {
   background-color: var(--bg-tertiary);
-  padding: 0.75rem 1rem;
   font-weight: 600;
+}
+
+.dataTable th {
+  padding: 0.75rem 0.25rem;
   border-bottom: 1px solid var(--border-color);
 }
 
+.thContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.tdContent {
+  text-align: center;
+}
+
 .dataTable td {
-  padding: 0.75rem 1rem;
+  padding: 0.25rem 0.5rem;
   border-bottom: 1px solid var(--border-color);
+}
+
+.dataTable tr {
+  height: 50px;
 }
 
 .dataTable tr:last-child td {
@@ -28,18 +46,12 @@
 }
 
 .dataTable tbody tr:hover {
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-quaternary);
 }
 
 .sortable {
   cursor: pointer;
   user-select: none;
-}
-
-.thContent {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 }
 
 .emptyTableBody {
@@ -85,4 +97,47 @@
 
 .paginationInfo {
   color: var(--text-secondary);
+}
+
+.typeContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+}
+
+.typeBadge {
+  padding: 4px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+  display: block;
+  width: 100%;
+  text-shadow: 2px 2px 2px black;
+  border: 2px solid var(--border-color);
+}
+
+.typeSprite {
+  width: 5rem;
+  object-fit: contain;
+}
+
+.pokemonContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+}
+
+.pokemonSprite {
+  width: 4rem;
+  object-fit: contain;
+}
+
+.objectName {
+  font-weight: 500;
+  font-size: 20px;
 }

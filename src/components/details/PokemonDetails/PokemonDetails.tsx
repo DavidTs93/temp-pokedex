@@ -28,7 +28,7 @@ const PokemonDetails: React.FC<PokemonDetailsProps> = ({
     <div className={styles.pokemonDetails}>
       <div className={styles.pokemonHeader}>
         <div className={styles.pokemonImage}>
-          {pokemon.spriteUrl && <img src={pokemon.spriteUrl} alt={pokemon.name} />}
+          {pokemon.sprite && <img src={pokemon.sprite} alt={pokemon.name} />}
         </div>
         <div className={styles.pokemonInfo}>
           <h2>{pokemon.name}</h2>

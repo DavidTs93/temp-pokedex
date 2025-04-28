@@ -1,0 +1,24 @@
+.scrollToTopButton {
+  border-radius: 50%;
+  background-color: #ff5050;
+  border: 0.1rem solid var(--border-color);
+  padding: 0.5rem;
+  cursor: pointer;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 0.2rem 0.5rem var(--shadow-color);
+}
+
+.scrollToTopButton:hover {
+  transform: scale(1.1);
+  background-color: #ff3c3c;
+  box-shadow: 0 0.4rem 0.8rem var(--shadow-color);
+}
+
+.scrollToTopButton svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}

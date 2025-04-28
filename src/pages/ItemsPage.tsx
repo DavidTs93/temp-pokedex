@@ -1,6 +1,6 @@
 import React from 'react';
 import { Item } from '../types/classes';
-import { ItemDetails } from '../components/details';
+import { ItemDetails } from '../components/Details';
 import { useGameData } from '../contexts/GameDataContext';
 import { BaseDataPage, Column } from '../components/BaseDataPage';
 

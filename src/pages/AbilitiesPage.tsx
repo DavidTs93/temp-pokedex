@@ -1,6 +1,6 @@
 import React from 'react';
 import { Ability } from '../types/classes';
-import { AbilityDetails } from '../components/details';
+import { AbilityDetails } from '../components/Details';
 import { useGameData } from '../contexts/GameDataContext';
 import { BaseDataPage, Column } from '../components/BaseDataPage';
 

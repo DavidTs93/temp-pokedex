@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import styles from './Navigation.module.css';
-import { useGameData } from '../../contexts/GameDataContext';
-const Navigation: React.FC = () => {
+import styles from './TopNavigation.module.css';
+import { useGameData } from '../../../contexts/GameDataContext';
+const TopNavigation: React.FC = () => {
   const location = useLocation();
   const { gameData } = useGameData();
 
@@ -10,7 +10,9 @@ const Navigation: React.FC = () => {
     <nav className={styles.navigation}>
       <div className={styles.navContent}>
         <Link to="/" className={styles.navLogo}>
-          <img src="/logo.png" alt="Pokédex Logo" />
+          {gameData.config.logo && (
+            <img src={gameData.config.logo} alt="Pokédex Logo" />
+          )}
           <h1>{gameData.config.title}</h1>
         </Link>
         <div className={styles.navLinks}>
@@ -50,4 +52,4 @@ const Navigation: React.FC = () => {
   );
 };
 
-export default Navigation;
+export default TopNavigation;

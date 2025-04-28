@@ -1,14 +1,15 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Navigation from './components/Navigation/Navigation';
-import BottomNavigation from './components/BottomNavigation/BottomNavigation';
+import TopNavigation from './components/Navigation/TopNavigation/TopNavigation';
+import BottomNavigation from './components/Navigation/BottomNavigation/BottomNavigation';
 import MainPage from './pages/MainPage';
+import styles from './styles/App.module.css';
 
 const AppRoutes: React.FC = () => {
   return (
-    <div className="app">
-      <Navigation />
-      <main className="main-content">
+    <div className={styles.app}>
+      <TopNavigation />
+      <main className={styles.mainContent}>
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
