@@ -22,7 +22,7 @@
 .detailSection {
   background-color: var(--bg-secondary);
   padding: 1rem;
-  border-radius: 8px;
+  border-radius: var(--border-radius-md);
 }
 
 .detailSection h3 {

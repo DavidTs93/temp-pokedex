@@ -2,8 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useGameData } from '../../contexts/GameDataContext';
 import { useNavigate } from 'react-router-dom';
 import styles from './Table.module.css';
-import { isArrayType, isObject } from '../../utils/utils';
+import appStyles from '../../styles/App.module.css';
+import { isUndefined, isNull, isObject, isFunction, isString,
+  isStringOrValidNumber, isEmpty } from '../../utils/utils';
 import { Pokemon, Type } from '../../types/classes';
+import { TypeDisplay } from '../Details/PokemonDetails/PokemonDetails';
 
 export interface Column<T> {
   header: string;
@@ -15,7 +18,7 @@ export interface Column<T> {
 
 export interface TableProps<T> {
   columns: Column<T>[];
-  data: T[];
+  data: readonly T[];
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
@@ -46,7 +49,7 @@ export function Table<T>({
   enableSorting = true,
   itemsPerPage = 10
 }: TableProps<T>) {
-  const { gameData } = useGameData();
+  useGameData();
   const navigate = useNavigate();
   const [internalSortColumn, setInternalSortColumn] = useState<string | null>(null);
   const [internalSortDirection, setInternalSortDirection] = useState<'asc' | 'desc'>('asc');
@@ -109,7 +112,7 @@ export function Table<T>({
 
   // Render cell content
   const renderCell = (item: T, column: Column<T>) => {
-    if (typeof column.accessor === 'function') {
+    if (isFunction(column.accessor)) {
       return (
         <div>
           {renderCellContent((column.accessor as (item: T) => any)(item))}
@@ -117,82 +120,49 @@ export function Table<T>({
       );
     } else {
       return (
-        <div className={column.accessor === 'name' ? styles.objectName : ''}>
+        <div className={column.accessor === 'name' ? styles.tableObjectName : ''}>
           {renderCellContent(item[column.accessor as keyof T])}
         </div>
       );
     }
   };
 
-  type Info<T> = {
-    isType: (val: any) => val is T,
-    className: string,
-    render: (val: T, index: number) => React.ReactNode
+  interface Displayable {
+    toDisplay(): string;
+  }
+  
+  function isDisplayable(obj: any): obj is Displayable {
+    return isFunction(obj?.toDisplay);
   }
 
-  function renderCellInfo<V>(value: V): Info<V> | undefined {
+  function renderCellContent(value: any, index?: number): React.ReactNode {
+    if (isUndefined(value) || isNull(value)) return '';
+    const keyProps = isUndefined(index) ? {} : { key: index };
+    if (isStringOrValidNumber(value)) {
+      return <span {...keyProps}>{value}</span>;
+    }
+
     if (Array.isArray(value)) {
-      return undefined;
-    }
-
-    if (value instanceof Type) {
-      return {
-        isType: (val: any): val is Type => val instanceof Type,
-        className: styles.typeContainer,
-        render: (type: Type, index: number) => (
-          type.sprite ?
-            <img key={index} src={type.sprite} alt={type.name} className={styles.typeSprite} /> :
-            <span key={index} className={styles.typeBadge} style={{ backgroundColor: type.color }}>
-              {type.name}
-            </span>
-        )
-      } as unknown as Info<V>;
-    }
-
-    if (value instanceof Pokemon) {
-      return {
-        isType: (val: any): val is Pokemon => val instanceof Pokemon,
-        className: styles.typeContainer,
-        render: (pokemon: Pokemon, index: number) =>
-          <div key={index} className={styles.pokemonContainer}>
-            {pokemon.sprite && <img src={pokemon.sprite} alt={pokemon.name} className={styles.pokemonSprite} />}
-            <span className={styles.objectName}>{pokemon.name}</span>
-          </div>
-      } as unknown as Info<V>;
-    }
-
-    return undefined;
-  };
-
-  function renderCellContent<V>(value: any) {
-    if (Array.isArray(value)) {
-      if (value.length === 0) {
-        return '';
-      }
-
-      let info: Info<V> | undefined = renderCellInfo(value[0]);
-      if (info && !isArrayType(value, info.isType)) {
-        info = undefined;
-      }
-
-      return (
-        <div className={info?.className}>
-          {value.map(info ? info.render : val => val)}
+      return isEmpty(value) ? '' : (
+        <div className={`${appStyles.arrContainer} ${appStyles.flexColumn}`}>
+          {value.map((val: any, idx: number) => renderCellContent(val, idx))}
         </div>
       );
     }
 
-    const info: Info<V> | undefined = renderCellInfo(value);
-    if (info) {
-      return (
-        info.render(value, 0)
-      );
-    }
-    if (value !== null && isObject(value)) {
-      return JSON.stringify(value);
+    if (value instanceof Type) return TypeDisplay(value, keyProps);
+    if (value instanceof Pokemon) {
+      return <div {...keyProps} className={styles.tablePokemonContainer}>
+        {value.sprite && <img src={value.sprite} alt={value.name} className={styles.tablePokemonSprite} />}
+        <span className={styles.tableObjectName}>{value.name}</span>
+      </div>
     }
 
-    return value ?? '';
+    if (isDisplayable(value)) return value.toDisplay();
+    const name = (value as any)?.name;
+    if (isString(name)) return renderCellContent(name);
+    if (isObject(value)) return renderCellContent(JSON.stringify(value));
+    return '';
   };
 
   // Render sort indicator
@@ -233,8 +203,8 @@ export function Table<T>({
       }
 
       if (aValue === bValue) return 0;
-      if (aValue === null || aValue === undefined) return 1;
-      if (bValue === null || bValue === undefined) return -1;
+      if (isUndefined(aValue) || isNull(aValue)) return 1;
+      if (isUndefined(bValue) || isNull(bValue)) return -1;
 
       const comparison = aValue < bValue ? -1 : 1;
       return sortDir === 'asc' ? comparison : -comparison;
@@ -266,7 +236,7 @@ export function Table<T>({
             ))}
           </tr>
         </thead>
-        {data.length === 0 ? (
+        {isEmpty(data) ? (
           <tbody className={styles.emptyTableBody}>
             <tr>
               <td colSpan={columns.length}>
@@ -282,7 +252,7 @@ export function Table<T>({
               <tr
                 key={rowIndex}
                 onClick={() => handleRowClick(item)}
-                className={onRowClick ? styles.clickable : ''}
+                className={onRowClick ? appStyles.clickable : ''}
               >
                 {columns.map((column, colIndex) => (
                   <td className={styles.tdContent} key={colIndex}>{renderCell(item, column)}</td>

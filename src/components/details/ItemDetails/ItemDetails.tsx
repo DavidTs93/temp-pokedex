@@ -7,9 +7,7 @@ const ItemDetails: React.FC<Item> = (item) => {
     <div className={styles.itemDetails}>
       <div className={styles.itemHeader}>
         {item.sprite && (
-          <div className={styles.itemImage}>
-            <img src={item.sprite} alt={item.name} />
-          </div>
+          <img src={item.sprite} alt={item.name} className={styles.itemSprite} />
         )}
         <h3 className={styles.itemName}>{item.name}</h3>
         <span className={styles.categoryBadge}>

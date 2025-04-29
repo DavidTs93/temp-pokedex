@@ -4,10 +4,11 @@ import SearchAndFilter from './SearchAndFilter/SearchAndFilter';
 import Modal from './Modal/Modal';
 import { filterData } from '../utils/filter';
 import { paginateData } from '../utils/pagination';
-import { useModal } from '../hooks/useModal';
+import { useModal } from '../contexts/ModalContext';
 import { useSort } from '../contexts/SortContext';
 import { useGameData } from '../contexts/GameDataContext';
 import styles from '../styles/App.module.css';
+import { isFunction, isObject } from '../utils/utils';
 
 export interface Column<T> {
   header: string;
@@ -27,7 +28,7 @@ export type EntityType = 'pokemon' | 'move' | 'ability' | 'item' | 'location';
 export interface BaseDataPageProps<T> {
   title: string;
   description: string;
-  data: T[];
+  data: readonly T[];
   columns: Column<T>[];
   filterOptions?: FilterOption[];
   searchFields: (keyof T)[];
@@ -65,7 +66,7 @@ export function BaseDataPage<T extends { id: string | number; name?: string }>({
   sessionStoragePrefix = entityType,
   filterLabel = 'Filters'
 }: BaseDataPageProps<T>) {
-  const { gameData } = useGameData();
+  useGameData();
   const [searchValue, setSearchValue] = useState('');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -130,12 +131,12 @@ export function BaseDataPage<T extends { id: string | number; name?: string }>({
         }
 
         // Use a helper function to safely get the value from accessor
-        const value = typeof column.accessor === 'function'
+        const value = isFunction(column.accessor)
           ? (column.accessor as (item: T) => any)(item)
           : item[column.accessor as keyof T];
 
         if (Array.isArray(value)) return value.join(', ');
-        if (typeof value === 'object') return JSON.stringify(value);
+        if (isObject(value)) return JSON.stringify(value);
         return value ?? '';
       };
 
@@ -184,7 +185,7 @@ export function BaseDataPage<T extends { id: string | number; name?: string }>({
   };
 
   // Modal state
-  const { isOpen, selectedItem, modalStack, openModal, closeModal, closeAllModals } = useModal<T>();
+  const { isOpen, selectedItem, modalStack, openModal, closeModal, closeAllModals } = useModal();
 
   // Handle row click
   const handleRowClick = (item: T) => {

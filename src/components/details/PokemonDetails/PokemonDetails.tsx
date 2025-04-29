@@ -1,47 +1,47 @@
-import React, { useState } from 'react';
-import { Pokemon, Type } from '../../../types/classes';
+import React from 'react';
+import { Pokemon, Type, Ability, Move, EggGroup } from '../../../types/classes';
+import { useModal } from '../../../contexts/ModalContext';
 import styles from './PokemonDetails.module.css';
+import appStyles from '../../../styles/App.module.css';
 
-interface PokemonDetailsProps {
-  pokemon: Pokemon;
-  onTypeClick?: (type: Type) => void;
-  onAbilityClick?: (ability: string) => void;
-  onMoveClick?: (move: string) => void;
-  onEggGroupClick?: (eggGroup: string) => void;
+export function TypeDisplay(value: Type, keyProps?: Readonly<Record<string, any>>, extraClass?: string) {
+  return value.sprite ?
+    <img {...keyProps || {}} src={value.sprite} alt={value.name} className={`${styles.typeSprite} ${extraClass}`} /> :
+    <span {...keyProps || {}} className={`${appStyles.typeBadge} ${extraClass}`}
+      style={{ backgroundColor: value.color }}>
+      {value.name}
+    </span>
 }
 
-const PokemonDetails: React.FC<PokemonDetailsProps> = ({
-  pokemon,
-  onTypeClick,
-  onAbilityClick,
-  onMoveClick,
-  onEggGroupClick
-}) => {
-  const [selectedType, setSelectedType] = useState<Type | undefined>();
+const PokemonDetails: React.FC<Pokemon> = (pokemon) => {
+  const { openModal } = useModal();
 
   const handleTypeClick = (type: Type) => {
-    setSelectedType(type);
-    onTypeClick?.(type);
+    openModal(type);
+  };
+
+  const handleAbilityClick = (ability: Ability) => {
+    openModal(ability);
+  };
+
+  const handleMoveClick = (move: Move) => {
+    openModal(move);
+  };
+
+  const handleEggGroupClick = (eggGroup: EggGroup) => {
+    openModal(eggGroup);
   };
 
   return (
     <div className={styles.pokemonDetails}>
       <div className={styles.pokemonHeader}>
-        <div className={styles.pokemonImage}>
-          {pokemon.sprite && <img src={pokemon.sprite} alt={pokemon.name} />}
-        </div>
+        {pokemon.sprite && <img src={pokemon.sprite} alt={pokemon.name} className={styles.pokemonSprite} />}
         <div className={styles.pokemonInfo}>
           <h2>{pokemon.name}</h2>
-          <div className={styles.pokemonTypes}>
-            {pokemon.types.map((type) => (
-              <span
-                key={type.id}
-                className={`${styles.type} ${type.id}`}
-                onClick={() => handleTypeClick(type)}
-              >
-                {type.name}
-              </span>
-            ))}
+          <div className={`${appStyles.arrContainer} ${appStyles.flexRow}`}>
+            {pokemon.types.map((type) =>
+              TypeDisplay(type, { onClick: () => handleTypeClick(type) }, appStyles.clickable)
+            )}
           </div>
         </div>
       </div>
@@ -62,8 +62,8 @@ const PokemonDetails: React.FC<PokemonDetailsProps> = ({
             {pokemon.abilities.filter(a => !a.ignored).map((ability) => (
               <span
                 key={ability.id}
-                className={`${styles.ability} ${onAbilityClick ? styles.clickable : ''}`}
-                onClick={() => onAbilityClick?.(ability.id)}
+                className={`${styles.ability} ${appStyles.clickable}`}
+                onClick={() => handleAbilityClick(ability)}
               >
                 {ability.name}
               </span>
@@ -78,8 +78,8 @@ const PokemonDetails: React.FC<PokemonDetailsProps> = ({
               {pokemon.moves.levelUp.filter(m => !m.move.ignored).map((move) => (
                 <span
                   key={move.move.id}
-                  className={`${styles.move} ${onMoveClick ? styles.clickable : ''}`}
-                  onClick={() => onMoveClick?.(move.move.id)}
+                  className={`${styles.move} ${appStyles.clickable}`}
+                  onClick={() => handleMoveClick(move.move)}
                 >
                   {move.move.name}
                 </span>
@@ -95,8 +95,8 @@ const PokemonDetails: React.FC<PokemonDetailsProps> = ({
               {pokemon.eggGroups.map((eggGroup) => (
                 <span
                   key={eggGroup.id}
-                  className={`${styles.eggGroup} ${onEggGroupClick ? styles.clickable : ''}`}
-                  onClick={() => onEggGroupClick?.(eggGroup.id)}
+                  className={`${styles.eggGroup} ${appStyles.clickable}`}
+                  onClick={() => handleEggGroupClick(eggGroup)}
                 >
                   {eggGroup.name}
                 </span>

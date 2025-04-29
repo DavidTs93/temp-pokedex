@@ -1,7 +1,7 @@
 import React from 'react';
 import { GameDataProvider } from '../contexts/GameDataContext';
-import { GameData } from '../types/gameData';
-import { IAbility, ITypes, IMove, IItem, IPokemonMoves, IPokemonMovesInfo, IPokemon,
+import GameData from '../types/gameData';
+import { IAbility, ITypes, IMove, IItem, IPokemonMovesInfo, IPokemon,
   ILocation, IEvolution, IConfig, IGameConfig } from '../types/interfaces';
 
 // Import JSON files directly
@@ -28,7 +28,7 @@ const pokemonMovesInfoJsonData: IPokemonMovesInfo[] = pokemonMovesJson;
 const locationsJsonData: ILocation[] = locationsJson;
 const pokemonEvolutionsJsonData: IEvolution[] = pokemonEvolutionsJson;
 
-export const DataLoader: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const DataLoader: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   try {
     const gameData = new GameData(
       configJsonData,
@@ -57,3 +57,5 @@ export const DataLoader: React.FC<{ children: React.ReactNode }> = ({ children }
     return <div className="error">Error: {err instanceof Error ? err.message : 'Failed to load game data'}</div>;
   }
 };
+
+export default DataLoader;

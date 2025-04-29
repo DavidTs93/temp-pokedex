@@ -3,6 +3,7 @@
     "species": "SPECIES_BULBASAUR",
     "types": ["TYPE_GRASS", "TYPE_POISON"],
     "abilities": ["ABILITY_OVERGROW", "ABILITY_NONE"],
+    "hiddenAbilities": ["ABILITY_CHLOROPHYLL"],
     "stats": {
       "HP": 45,
       "ATTACK": 49,
@@ -17,7 +18,7 @@
   {
     "species": "SPECIES_IVYSAUR",
     "types": ["TYPE_GRASS", "TYPE_POISON"],
-    "abilities": ["ABILITY_OVERGROW", "ABILITY_NONE"],
+    "abilities": ["ABILITY_CHLOROPHYLL", "ABILITY_OVERGROW"],
     "stats": {
       "HP": 60,
       "ATTACK": 62,

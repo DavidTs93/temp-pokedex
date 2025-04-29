@@ -3,16 +3,17 @@ import { Pokemon, Type, Ability, EggGroup } from '../types/classes';
 import { PokemonDetails } from '../components/Details';
 import { useGameData } from '../contexts/GameDataContext';
 import { BaseDataPage, Column } from '../components/BaseDataPage';
+import appStyles from '../styles/App.module.css';
 
 const PokemonPage: React.FC = () => {
   const { gameData } = useGameData();
 
   // Get data from GameData
-  const pokemonData = Object.values(gameData.pokemon.byId).filter(p => !p.ignored);
-  const types = Object.values(gameData.types.byId);
-  const abilities = Object.values(gameData.abilities.byId).filter(a => !a.ignored);
-  const eggGroups = Object.values(gameData.eggGroups.byId);
-  const stats = Object.values(gameData.gameConfig.stats.byId);
+  const pokemonData = gameData.pokemon.values.filter(p => !p.ignored && !p.forme);
+  const types = gameData.types.values;
+  const abilities = gameData.abilities.allValues.filter(a => !a.ignored);
+  const eggGroups = gameData.eggGroups.allValues;
+  const stats = gameData.gameConfig.stats.values;
 
   // Create filter options
   const typeOptions = types.map((type: Type) => ({
@@ -29,6 +30,14 @@ const PokemonPage: React.FC = () => {
     value: group.id,
     label: group.name
   }));
+
+  class HiddenAbility {
+    constructor(public readonly ability: Ability) {}
+
+    toDisplay() {
+      return <span className={appStyles.hiddenAbility }>{this.ability.name}</span>;
+    }
+  }
 
   // Table columns
   const columns: Column<Pokemon>[] = [
@@ -49,8 +58,12 @@ const PokemonPage: React.FC = () => {
     },
     {
       header: 'Abilities',
-      accessor: ((pokemon: Pokemon) => pokemon.abilities.
-        filter(a => !a.ignored).map(a => a.name).join(', ')) as unknown as keyof Pokemon,
+      accessor: ((pokemon: Pokemon) =>
+        [
+          ...pokemon.abilities.filter(a => !a.ignored),
+          ...(pokemon.hiddenAbilities?.filter(a => !a.ignored).map(a => new HiddenAbility(a)) || [])
+        ]
+      ) as unknown as keyof Pokemon,
       width: '10%',
       sortable: true
     },
@@ -86,7 +99,7 @@ const PokemonPage: React.FC = () => {
       DetailsComponent={PokemonDetails}
       searchPlaceholder="Search Pokémon by name or description"
       enableSessionStorage={true}
-      sessionStoragePrefix="pokedex"
+      sessionStoragePrefix="pokemon"
     />
   );
 };

@@ -1,7 +1,8 @@
 import React from 'react';
 import styles from './ScrollToTopButton.module.css';
+import bnStyles from '../BottomNavigation.module.css';
 
-export const ScrollToTopButton: React.FC = () => {
+const ScrollToTopButton: React.FC = () => {
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -11,7 +12,7 @@ export const ScrollToTopButton: React.FC = () => {
 
   return (
     <button
-      className={styles.scrollToTopButton}
+      className={`${styles.scrollToTopButton} ${bnStyles.bottomButton}`}
       onClick={scrollToTop}
       aria-label="Scroll to top"
     >
@@ -21,3 +22,5 @@ export const ScrollToTopButton: React.FC = () => {
     </button>
   );
 };
+
+export default ScrollToTopButton;

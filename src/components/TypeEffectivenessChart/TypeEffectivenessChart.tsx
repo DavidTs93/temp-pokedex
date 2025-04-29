@@ -17,7 +17,7 @@ const TypeEffectivenessChart: React.FC<TypeEffectivenessChartProps> = ({
   const { gameData } = useGameData();
 
   // Get all types from game data
-  const types = Object.values(gameData.types.byId);
+  const types = gameData.types.values;
 
   // Helper function to get effectiveness level between two types
   const getEffectivenessLevel = (attacker: Type, defender: Type): TypeEffectivenessLevel | undefined => {

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { isUndefined } from '../utils/utils';
 
 type Theme = 'dark' | 'light';
 
@@ -48,7 +49,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
 export const useTheme = () => {
   const context = useContext(ThemeContext);
-  if (context === undefined) {
+  if (isUndefined(context)) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;

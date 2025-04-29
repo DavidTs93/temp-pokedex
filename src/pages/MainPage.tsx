@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import TopNavigation from '../components/Navigation/TopNavigation/TopNavigation';
-import PokedexPage from './PokemonPage';
+import PokemonPage from './PokemonPage';
 import MovesPage from './MovesPage';
 import AbilitiesPage from './AbilitiesPage';
 import ItemsPage from './ItemsPage';
@@ -9,7 +9,7 @@ import LocationsPage from './LocationsPage';
 import styles from '../styles/App.module.css';
 // Define a map of page components
 const PAGE_COMPONENTS = {
-  pokemon: PokedexPage,
+  pokemon: PokemonPage,
   moves: MovesPage,
   abilities: AbilitiesPage,
   items: ItemsPage,

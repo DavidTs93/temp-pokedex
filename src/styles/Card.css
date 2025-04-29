@@ -8,7 +8,7 @@
 
 .card {
   background-color: var(--card-background-color);
-  border-radius: 8px;
+  border-radius: var(--border-radius-md);
   border: 1px solid var(--card-border-color);
   box-shadow: 0 2px 4px var(--card-shadow-color);
   padding: 1rem;
@@ -30,7 +30,7 @@
   margin: 0;
   color: var(--card-text-color);
   font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
 }
 
 .card-body {

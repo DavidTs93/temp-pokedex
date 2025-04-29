@@ -16,14 +16,14 @@
 
 .filter-label {
   color: var(--filter-label-color);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   margin-bottom: 0.25rem;
 }
 
 .filter-select {
   padding: 0.5rem;
   border: 1px solid var(--filter-border-color);
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
   background-color: var(--filter-background-color);
   color: var(--filter-text-color);
   font-size: 1rem;

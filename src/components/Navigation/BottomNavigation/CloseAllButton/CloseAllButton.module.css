@@ -1,8 +1,8 @@
-.scrollToTopButton {
+.closeAllButton {
   background-color: #ff5050;
   color: white;
 }
 
-.scrollToTopButton:hover {
+.closeAllButton:hover {
   background-color: #ff3c3c;
 }

@@ -8,7 +8,7 @@ const AbilitiesPage: React.FC = () => {
   const { gameData } = useGameData();
 
   // Get data from GameData
-  const abilitiesData = Object.values(gameData.abilities.byId).filter(a => !a.ignored);
+  const abilitiesData = gameData.abilities.allValues.filter(a => !a.ignored);
 
   // Table columns
   const columns: Column<Ability>[] = [

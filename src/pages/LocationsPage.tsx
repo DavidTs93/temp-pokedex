@@ -8,8 +8,8 @@ const LocationsPage: React.FC = () => {
   const { gameData } = useGameData();
 
   // Get data from GameData
-  const locations = Object.values(gameData.locations.byId);
-  const regions = Object.values(gameData.gameConfig.regions.byId);
+  const locations = gameData.locations.values;
+  const regions = gameData.gameConfig.regions.values;
 
   // Filter options
   const filterOptions = regions.map(region => ({

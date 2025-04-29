@@ -1,139 +1,126 @@
-:root {
-  --location-details-gap: 1.5rem;
-  --location-details-padding: 1rem;
-  --location-region-gap: 0.5rem;
-  --location-region-padding: 0.5rem 1rem;
-  --location-region-radius: 1rem;
-  --location-detail-label-color: #666;
-  --location-detail-text-color: #333;
-  --location-detail-bg: #f0f0f0;
-  --location-detail-radius: 0.25rem;
-  --location-detail-padding: 0.5rem;
-}
-
-.location-details {
+.locationDetails {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   padding: 1.5rem;
   background-color: var(--bg-secondary);
-  border-radius: 8px;
+  border-radius: var(--border-radius-md);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.location-header {
+.locationHeader {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
-.location-icon {
+.locationIcon {
   width: 48px;
   height: 48px;
   background-color: var(--bg-tertiary);
-  border-radius: 8px;
+  border-radius: var(--border-radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.location-icon img {
+.locationIcon img {
   width: 32px;
   height: 32px;
 }
 
-.location-title {
+.locationTitle {
   margin: 0;
   color: var(--text-primary);
   font-size: 1.5rem;
 }
 
-.location-type {
+.locationType {
   padding: 0.25rem 0.75rem;
-  border-radius: 4px;
-  font-weight: 500;
+  border-radius: var(--border-radius-sm);
+  font-weight: var(--font-weight-medium);
   font-size: 0.875rem;
   text-transform: capitalize;
 }
 
-.location-description {
+.locationDescription {
   color: var(--text-primary);
   line-height: 1.6;
 }
 
-.location-stats {
+.locationStats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 1rem;
 }
 
-.stat-item {
+.statItem {
   background-color: var(--bg-tertiary);
   padding: 1rem;
-  border-radius: 8px;
+  border-radius: var(--border-radius-md);
   text-align: center;
 }
 
-.stat-label {
+.statLabel {
   color: var(--text-secondary);
   font-size: 0.875rem;
   margin-bottom: 0.5rem;
 }
 
-.stat-value {
+.statValue {
   color: var(--text-primary);
   font-size: 1.25rem;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 
-.location-pokemon {
+.locationPokemon {
   margin-top: 1rem;
 }
 
-.pokemon-list {
+.pokemonList {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 1rem;
   margin-top: 1rem;
 }
 
-.pokemon-item {
+.pokemonItem {
   display: flex;
   align-items: center;
   gap: 1rem;
   padding: 0.75rem;
   background-color: var(--bg-tertiary);
-  border-radius: 8px;
+  border-radius: var(--border-radius-md);
   text-decoration: none;
   color: var(--text-primary);
   transition: background-color 0.3s;
 }
 
-.pokemon-item:hover {
+.pokemonItem:hover {
   background-color: var(--bg-secondary);
 }
 
-.pokemon-image {
+.pokemonImage {
   width: 48px;
   height: 48px;
   object-fit: contain;
 }
 
-.pokemon-name {
-  font-weight: 500;
+.pokemonName {
+  font-weight: var(--font-weight-medium);
 }
 
 /* Responsive styles */
 @media (max-width: 768px) {
-  .location-details {
+  .locationDetails {
     padding: 1rem;
   }
 
-  .location-stats {
+  .locationStats {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .pokemon-list {
+  .pokemonList {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
 }

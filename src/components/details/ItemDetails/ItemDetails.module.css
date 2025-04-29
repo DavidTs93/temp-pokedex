@@ -3,11 +3,11 @@
   --item-details-padding: 1rem;
   --item-category-gap: 0.5rem;
   --item-category-padding: 0.5rem 1rem;
-  --item-category-radius: 1rem;
+  --item-category-radius: var(--border-radius-md);
   --item-detail-label-color: #666;
   --item-detail-text-color: #333;
   --item-detail-bg: #f0f0f0;
-  --item-detail-radius: 0.25rem;
+  --item-detail-radius: var(--border-radius-sm);
   --item-detail-padding: 0.5rem;
 }
 
@@ -27,7 +27,7 @@
 
 .itemName {
   font-size: 1.5rem;
-  font-weight: bold;
+  font-weight: var(--font-weight-bold);
   color: var(--item-detail-text-color);
   margin: 0;
 }
@@ -36,11 +36,11 @@
   padding: var(--item-category-padding);
   background-color: var(--item-detail-bg);
   border-radius: var(--item-category-radius);
-  font-weight: bold;
+  font-weight: var(--font-weight-bold);
   text-transform: capitalize;
 }
 
-.itemImage {
+.itemSprite {
   width: 100px;
   height: 100px;
   object-fit: contain;
@@ -62,7 +62,7 @@
 }
 
 .effectLabel {
-  font-weight: bold;
+  font-weight: var(--font-weight-bold);
   color: var(--item-detail-label-color);
 }
 
@@ -84,7 +84,7 @@
 }
 
 .propertyLabel {
-  font-weight: bold;
+  font-weight: var(--font-weight-bold);
   color: var(--item-detail-label-color);
   font-size: 0.875rem;
 }
@@ -100,7 +100,7 @@
 }
 
 .obtainableLabel {
-  font-weight: bold;
+  font-weight: var(--font-weight-bold);
   color: var(--item-detail-label-color);
 }
 
@@ -137,7 +137,7 @@
     justify-content: center;
   }
 
-  .itemImage {
+  .itemSprite {
     width: 80px;
     height: 80px;
   }

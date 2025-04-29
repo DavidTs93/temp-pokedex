@@ -5,10 +5,6 @@ interface ModalState<T> {
   isOpen: boolean;
 }
 
-interface UseModalOptions {
-  selectedId?: string | number | null;
-}
-
 export function useModal<T extends { id: string | number }>() {
   const [modalStack, setModalStack] = useState<ModalState<T>[]>([]);
 

@@ -1,5 +1,5 @@
-import { IMoveCategory, IMoveTarget, IMoveEffectType, IMoveFlag, IItemCategory, IStat, IEggGroup,
-  IEncounterMethod, ITime, ISeason, IRegion, IEvolutionMethod, IAbility, IType,
+import { IEquals, IMoveCategory, IMoveTarget, IMoveEffectType, IMoveFlag, IItemCategory, IStat,
+  IEggGroup, IEncounterMethod, ITime, ISeason, IRegion, IEvolutionMethod, IAbility, IType,
   ITypeEffectivenessLevel, ITypeEffectiveness, IMove, IItem, IMoveItem, IPokemonLevelUpMove,
   IPokemonMoves, IPokemonMovesInfo, IPokemonHeldItem, IPokemonStats, IPokemon, IPokemonEncounter, ILocation,
   IEvolutionComparison, IEvolution, IPaginationConfig, IConfig, IGameConfig, IById } from "./interfaces";
@@ -403,11 +403,11 @@ export class Ability {
 
   static fromId(
     id: string,
-    isIgnoredAbility?: (id: string) => boolean,
+    ignored?: boolean,
     prefix?: string
   ): Readonly<Ability> | undefined {
     const name = normalizeName(undefined, id, prefix);
-    return Object.freeze(new Ability(id, name, !!isIgnoredAbility?.(id)));
+    return Object.freeze(new Ability(id, name, !!ignored));
   }
 
   static fromInterface(
@@ -813,6 +813,10 @@ export class PokemonMoves {
     this.egg = Object.freeze(egg);
   }
 
+  equals(other: PokemonMoves): boolean {
+    return false;
+  }
+
   static fromInterface(
     pokemonMoves: IPokemonMoves,
     findMove: (id: string) => Move | undefined,
@@ -975,6 +979,8 @@ export class Pokemon {
     public readonly stats: Readonly<PokemonStats>,
     public readonly ignored: boolean,
     public readonly moves?: Readonly<PokemonMoves>,
+    public readonly hiddenAbilities?: readonly Readonly<Ability>[], // not empty, unique
+    public readonly forme?: Readonly<Pokemon>,
     public readonly heldItems?: readonly Readonly<PokemonHeldItem>[], // not empty, unique
     public readonly eggGroups?: readonly Readonly<EggGroup>[], // not empty, unique
     public readonly sprite?: string
@@ -982,6 +988,7 @@ export class Pokemon {
     this.types = Object.freeze(types);
     this.abilities = Object.freeze(abilities);
     this.moves = Object.freeze(moves);
+    this.hiddenAbilities = Object.freeze(hiddenAbilities);
     this.stats = Object.freeze(stats);
     this.heldItems = Object.freeze(heldItems);
     this.eggGroups = Object.freeze(eggGroups);
@@ -1000,14 +1007,16 @@ export class Pokemon {
     findStat: (id: string) => Stat | undefined,
     allStats: readonly Stat[],
     findItem: (id: string) => Item | undefined,
+    findForme: (id: number | string) => Pokemon | undefined,
     findEggGroup: (id: string) => EggGroup | undefined,
     isIgnoredPokemon?: (id: number, species: string) => boolean,
     prefix?: string
   ): Readonly<Pokemon> | undefined {
-    if (!pokemon || !findType || !findAbility || !findStat || !allStats ||
-      !findItem || !findEggGroup || !isString(pokemon.species) || !isOptionalString(pokemon.name) ||
-      !isStringArray(pokemon.types) || !isStringArray(pokemon.abilities) ||
-      !isOptionalStringArray(pokemon.eggGroups) || !isOptionalString(pokemon.sprite)) {
+    if (!pokemon || !findType || !findAbility || !findStat || !allStats || !findItem || !findForme || !findEggGroup ||
+      !isString(pokemon.species) || !isOptionalString(pokemon.name) || !isStringArray(pokemon.types) ||
+      !isStringArray(pokemon.abilities) || !isOptionalStringArray(pokemon.hiddenAbilities) ||
+      !isOptionalStringOrValidNumber(pokemon.forme) || !isOptionalStringArray(pokemon.eggGroups) ||
+      !isOptionalString(pokemon.sprite)) {
       return undefined;
     }
 
@@ -1025,21 +1034,26 @@ export class Pokemon {
     const abilities = pokemon.abilities.map(findAbility);
     const moves = findMoves(id, pokemon.species);
     const stats = PokemonStats.fromInterface(pokemon.stats, findStat, allStats);
+    const hiddenAbilities = pokemon.hiddenAbilities?.map(findAbility);
+    const forme = isDefined(pokemon.forme) ? findForme(pokemon.forme) : undefined;
     const heldItems = pokemon.heldItems?.map(item => PokemonHeldItem.fromInterface(item, findItem));
     const eggGroups = pokemon.eggGroups?.map(findEggGroup);
     if (isEmpty(types) || !isAllDefined(types) || isEmpty(abilities) || !isAllDefined(abilities) ||
-      !stats || (heldItems && !isAllDefined(heldItems)) || (eggGroups && !isAllDefined(eggGroups))) {
+      !stats || (hiddenAbilities && !isAllDefined(hiddenAbilities)) ||
+      (isUndefined(pokemon.forme) !== isUndefined(forme)) || (heldItems && !isAllDefined(heldItems)) ||
+      (eggGroups && !isAllDefined(eggGroups))) {
       return undefined;
     }
 
     const name = normalizeName(pokemon.name, pokemon.species, prefix);
     const ut = uniqueByEquals(types);
     const ua = uniqueByEquals(abilities);
+    const uha = hiddenAbilities && uniqueByEquals(hiddenAbilities);
     const ignored = !!isIgnoredPokemon?.(id, pokemon.species);
     const uhi = heldItems && uniqueByEquals(heldItems);
     const ueg = eggGroups && uniqueByEquals(eggGroups);
     return Object.freeze(new Pokemon(id, pokemon.species, name, ut, ua, stats,
-      ignored, moves, uhi, ueg, pokemon.sprite));
+      ignored, moves, uha, forme, uhi, ueg, pokemon.sprite));
   }
 }
 
@@ -1310,10 +1324,13 @@ export class Cache<T> {
 }
 
 export class CacheById<T extends IById<T>> {
+  public readonly values: readonly Readonly<T>[];
+
   private constructor(
     readonly byId: Readonly<Record<string, Readonly<T>>>
   ) {
     this.byId = Object.freeze(byId);
+    this.values = Object.freeze(Object.values(byId));
   }
 
   findById(
@@ -1346,12 +1363,17 @@ export class CacheById<T extends IById<T>> {
 }
 
 export class DependantCacheById<T extends IById<T>> {
+  public readonly values: readonly Readonly<T>[];
+  public readonly allValues: readonly Readonly<T>[];
+
   private constructor(
     readonly byId: Readonly<Record<string, Readonly<T>>>,
     readonly existingCache: Readonly<CacheById<T>>
   ) {
     this.byId = Object.freeze(byId);
     this.existingCache = Object.freeze(existingCache);
+    this.values = Object.freeze(Object.values(byId));
+    this.allValues = Object.freeze([...Object.values(byId), ...existingCache.values]);
   }
 
   findById(
@@ -1377,7 +1399,7 @@ export class UpdatingCacheById<T extends IById<T>> {
   readonly byId: Record<string, Readonly<T>> = {};
 
   private constructor(
-    readonly create: (id: string) => T | undefined,
+    readonly create: (id: string, ignored?: boolean) => T | undefined,
     readonly existingCache: Readonly<CacheById<T>>,
     readonly isIgnored?: (id: string) => boolean
   ) {}
@@ -1394,16 +1416,12 @@ export class UpdatingCacheById<T extends IById<T>> {
       return existing;
     }
 
-    if (this.isIgnored?.(id)) {
-      return undefined;
-    }
-
     const local = this.byId[id.toLowerCase()];
     if (isDefined(local)) {
       return local;
     }
 
-    const created = this.create(id);
+    const created = this.create(id, this.isIgnored?.(id));
     if (isUndefined(created) || id !== created.id) {
       return undefined;
     }
@@ -1417,7 +1435,7 @@ export class UpdatingCacheById<T extends IById<T>> {
   }
 
   static fromData<T extends IById<T>>(
-    create: (id: string) => T | undefined,
+    create: (id: string, ignored?: boolean) => T | undefined,
     existingCache: Readonly<CacheById<T>>,
     isIgnored?: (id: string) => boolean
   ): Readonly<UpdatingCacheById<T>> {
@@ -1576,33 +1594,46 @@ export class MoveItemCache {
   }
 }
 
-export class PokemonCache {
+export class CacheByIdSpecies<T extends IEquals<T>> {
+  public readonly values: readonly Readonly<T>[];
+
   private constructor(
-    readonly byId: Readonly<Record<number, Readonly<Pokemon>>>,
-    readonly bySpecies: Readonly<Record<string, Readonly<Pokemon>>>
+    readonly byId: Readonly<Record<number, Readonly<T>>>,
+    readonly bySpecies: Readonly<Record<string, Readonly<T>>>
   ) {
     this.byId = Object.freeze(byId);
     this.bySpecies = Object.freeze(bySpecies);
+    this.values = Object.freeze(uniqueByEquals([...Object.values(byId), ...Object.values(bySpecies)]));
   }
 
-  findByValue(
+  static findByValueMaps<T>(
+    maps: {
+      readonly byId: Readonly<Record<number, Readonly<T>>>,
+      readonly bySpecies: Readonly<Record<string, Readonly<T>>>
+    },
     value: number | string
-  ): Readonly<Pokemon> | undefined {
+  ): Readonly<T> | undefined {
     if (isValidNumber(value)) {
-      return this.findByIdOrSpecies(value);
+      return maps.byId[value];
     }
 
     if (isString(value)) {
-      return this.findByIdOrSpecies(undefined, value);
+      return maps.bySpecies[value];
     }
 
     return undefined;
   }
 
-  findByIdOrSpecies(
+  findByValue(
+    value: number | string
+  ): Readonly<T> | undefined {
+    return CacheByIdSpecies.findByValueMaps(this, value);
+  }
+
+  findByIdSpecies(
     id?: number,
     species?: string
-  ): Readonly<Pokemon> | undefined {
+  ): Readonly<T> | undefined {
     if (isValidNumber(id)) {
       const pokemon = this.byId[id];
       if (pokemon) {
@@ -1617,62 +1648,33 @@ export class PokemonCache {
     return undefined;
   }
 
-  static fromArray(
-    pokemon: Pokemon[]
-  ): Readonly<PokemonCache> {
-    const byId: Record<number, Readonly<Pokemon>> = {};
-    const bySpecies: Record<string, Readonly<Pokemon>> = {};
-    pokemon.filter(isDefined).forEach(p => {
-      p = Object.freeze(p);
-      byId[p.id] = p;
-      bySpecies[p.species.toLowerCase()] = p;
-    });
-
-    return Object.freeze(new PokemonCache(byId, bySpecies));
-  }
-}
-
-export class PokemonMovesCache {
-  private constructor(
-    readonly byId: Readonly<Record<number, Readonly<PokemonMoves>>>,
-    readonly bySpecies: Readonly<Record<string, Readonly<PokemonMoves>>>
-  ) {
-    this.byId = Object.freeze(byId);
-    this.bySpecies = Object.freeze(bySpecies);
-  }
-
-  findByIdOrSpecies(
-    id?: number,
-    species?: string
-  ): Readonly<PokemonMoves> | undefined {
-    if (isValidNumber(id)) {
-      const pokemonMoves = this.byId[id];
-      if (pokemonMoves) {
-        return pokemonMoves;
+  static fromArray<T, V extends IEquals<V>>(
+    items: readonly T[],
+    findId: (item: T) => number | undefined,
+    findSpecies: (item: T) => string | undefined,
+    findValue: (item: T) => V | undefined
+  ): Readonly<CacheByIdSpecies<V>> {
+    const byId: Record<number, Readonly<V>> = {};
+    const bySpecies: Record<string, Readonly<V>> = {};
+    items.filter(isDefined).map(i => {
+      const id = findId(i);
+      const species = findSpecies(i);
+      const validId = isValidNumber(id);
+      const validSpecies = isString(species);
+      const value = findValue(i);
+      return { id, species, validId, validSpecies, value };
+    }).filter(i => i.value && (i.validId || i.validSpecies)).forEach(i => {
+      const value = Object.freeze(i.value!);
+      if (i.validId) {
+        byId[i.id!] = value;
       }
-    }
 
-    if (isString(species)) {
-      return this.bySpecies[species.toLowerCase()];
-    }
-
-    return undefined;
-  }
-
-  static fromArray(
-    pokemonMovesInfo: PokemonMovesInfo[]
-  ): Readonly<PokemonMovesCache> {
-    const byId: Record<number, Readonly<PokemonMoves>> = {};
-    const bySpecies: Record<string, Readonly<PokemonMoves>> = {};
-    pokemonMovesInfo.filter(isDefined).forEach(pmi => {
-      if (isString(pmi.pokemon)) {
-        bySpecies[pmi.pokemon.toLowerCase()] = pmi.moves;
-      } else {
-        byId[pmi.pokemon] = pmi.moves;
+      if (i.validSpecies) {
+        bySpecies[i.species!.toLowerCase()] = value;
       }
     });
 
-    return Object.freeze(new PokemonMovesCache(byId, bySpecies));
+    return Object.freeze(new CacheByIdSpecies(byId, bySpecies));
   }
 }
 

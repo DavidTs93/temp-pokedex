@@ -3,8 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { DataLoader } from "./components/DataLoader";
-import { GameDataProvider } from "./contexts/GameDataContext";
+import DataLoader from "./components/DataLoader";
 
 // Create a global function to run the site
 export function runSite() {

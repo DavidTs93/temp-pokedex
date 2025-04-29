@@ -147,6 +147,8 @@ export interface IPokemon extends Partial<IDataName & IDatasprite> {
   abilities: string[];
   stats: IPokemonStats;
   id?: number;
+  hiddenAbilities?: string[];
+  forme?: number | string;
   heldItems?: IPokemonHeldItem[];
   eggGroups?: string[];
 }

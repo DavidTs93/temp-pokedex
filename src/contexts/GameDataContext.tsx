@@ -1,5 +1,6 @@
 import React, { createContext, useContext } from 'react';
-import { GameData } from '../types/gameData';
+import GameData from '../types/gameData';
+import { isUndefined } from '../utils/utils';
 
 interface GameDataContextType {
   gameData: GameData;
@@ -28,7 +29,7 @@ export const GameDataProvider: React.FC<GameDataProviderProps> = ({
 
 export const useGameData = () => {
   const context = useContext(GameDataContext);
-  if (context === undefined) {
+  if (isUndefined(context)) {
     throw new Error('useGameData must be used within a GameDataProvider');
   }
   return context;

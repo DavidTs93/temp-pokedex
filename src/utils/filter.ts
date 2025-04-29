@@ -1,3 +1,5 @@
+import { isUndefined, isNull, isObject, isString } from "./utils";
+
 /**
  * Filter data based on search text and active filters
  * @param data The data to filter
@@ -8,12 +10,12 @@
  * @returns Filtered data
  */
 export function filterData<T>(
-  data: T[],
+  data: readonly T[],
   searchText: string,
   searchFields: (keyof T)[],
   activeFilters: Record<string, string[]> = {},
   filterConfig: Record<string, { field: string; type: 'multi' | 'single' }> = {}
-): T[] {
+): readonly T[] {
   // First apply search filter
   let filteredData = data;
 
@@ -22,29 +24,29 @@ export function filterData<T>(
     filteredData = data.filter(item => {
       return searchFields.some(field => {
         const value = item[field];
-        if (value === null || value === undefined) return false;
+        if (isUndefined(value) || isNull(value)) return false;
 
-        if (typeof value === 'string') {
+        if (isString(value)) {
           return value.toLowerCase().includes(searchLower);
         }
 
         if (Array.isArray(value)) {
           return value.some(v => {
-            if (typeof v === 'string') {
+            if (isString(v)) {
               return v.toLowerCase().includes(searchLower);
             }
-            if (typeof v === 'object' && v !== null) {
+            if (isObject(v)) {
               return Object.values(v).some(val =>
-                typeof val === 'string' && val.toLowerCase().includes(searchLower)
+                isString(val) && val.toLowerCase().includes(searchLower)
               );
             }
             return false;
           });
         }
 
-        if (typeof value === 'object') {
+        if (isObject(value)) {
           return Object.values(value).some(val =>
-            typeof val === 'string' && val.toLowerCase().includes(searchLower)
+            isString(val) && val.toLowerCase().includes(searchLower)
           );
         }
 

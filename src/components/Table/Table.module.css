@@ -1,7 +1,7 @@
 .tableContainer {
   overflow-x: auto;
   margin-bottom: 1.5rem;
-  border-radius: 8px;
+  border-radius: var(--border-radius-md);
   border: 1px solid var(--border-color);
 }
 
@@ -13,7 +13,7 @@
 
 .dataTable th {
   background-color: var(--bg-tertiary);
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
 }
 
 .dataTable th {
@@ -64,10 +64,6 @@
   font-style: italic;
 }
 
-.clickable {
-  cursor: pointer;
-}
-
 .pagination {
   display: flex;
   justify-content: center;
@@ -81,7 +77,7 @@
   border: 1px solid var(--border-color);
   background-color: var(--bg-secondary);
   color: var(--text-primary);
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
   cursor: pointer;
   transition: background-color 0.2s;
 }
@@ -99,32 +95,7 @@
   color: var(--text-secondary);
 }
 
-.typeContainer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  justify-content: center;
-  align-items: center;
-}
-
-.typeBadge {
-  padding: 4px;
-  border-radius: 10px;
-  font-size: 12px;
-  font-weight: 500;
-  color: white;
-  display: block;
-  width: 100%;
-  text-shadow: 2px 2px 2px black;
-  border: 2px solid var(--border-color);
-}
-
-.typeSprite {
-  width: 5rem;
-  object-fit: contain;
-}
-
-.pokemonContainer {
+.tablePokemonContainer {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
@@ -132,12 +103,12 @@
   justify-content: center;
 }
 
-.pokemonSprite {
+.tablePokemonSprite {
   width: 4rem;
   object-fit: contain;
 }
 
-.objectName {
-  font-weight: 500;
+.tableObjectName {
+  font-weight: var(--font-weight-medium);
   font-size: 20px;
 }

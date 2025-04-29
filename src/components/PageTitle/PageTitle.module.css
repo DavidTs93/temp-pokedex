@@ -2,7 +2,7 @@
   --page-title-margin: 2rem 0;
   --page-title-padding: 0.5rem 0;
   --page-title-font-size: 2rem;
-  --page-title-font-weight: 600;
+  --page-title-font-weight: var(--font-weight-bold);
   --page-title-color: var(--text-primary);
   --page-title-border-color: var(--border-color);
 }

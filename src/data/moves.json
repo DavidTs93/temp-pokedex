@@ -9,7 +9,8 @@
     "effectType": "EFFECT_HIT",
     "effectChance": 0,
     "target": "MOVE_TARGET_SELECTED",
-    "flags": ["FLAG_MAKES_CONTACT", "FLAG_PROTECT_AFFECTED", "FLAG_MIRROR_MOVE_AFFECTED", "FLAG_KINGS_ROCK_AFFECTED"]
+    "flags": ["FLAG_MAKES_CONTACT", "FLAG_PROTECT_AFFECTED", "FLAG_MIRROR_MOVE_AFFECTED", "FLAG_KINGS_ROCK_AFFECTED"],
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/refs/heads/master/sprites/items/tm-normal.png"
   },
   {
     "id": "MOVE_BLIZZARD",

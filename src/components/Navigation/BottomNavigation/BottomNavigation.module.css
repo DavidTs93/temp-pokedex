@@ -3,7 +3,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 1rem 0;
+  padding: 16px 0;
   background-color: transparent;
   z-index: 1000;
 }
@@ -11,31 +11,47 @@
 .bottomContainer {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 16px;
   height: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.bottomLeft {
+.bottomLeft, .bottomCenter, .bottomRight {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 16px;
 }
 
-.bottomRight {
+.bottomButton {
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  padding: 8px;
+  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+.bottomButton:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 12px var(--shadow-color);
+}
+
+.bottomButton svg {
+  width: 24px;
+  height: 24px;
 }
 
 @media (max-width: 768px) {
   .bottomNavigation {
-    padding: 0.5rem;
+    padding: 8px;
   }
 
   .bottomContainer {
-    padding: 0 0.5rem;
+    padding: 0 8px;
   }
 }

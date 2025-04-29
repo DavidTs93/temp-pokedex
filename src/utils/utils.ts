@@ -12,16 +12,29 @@ export function isDefined<T>(
   return !isUndefined(x);
 }
 
+export function isNull(
+  x: any
+): x is null {
+  return x === null;
+}
+
 export function isAllDefined<T>(
   arr: (T | undefined)[]
 ): arr is T[] {
   return !arr.some(isUndefined);
 }
 
+// Not null
 export function isObject(
   x: any
 ): x is object {
-  return x !== null && typeof x === 'object';
+  return !isNull(x) && typeof x === 'object';
+}
+
+export function isFunction(
+  x: any
+): x is Function {
+  return typeof x === 'function';
 }
 
 export function isString(
@@ -128,7 +141,7 @@ export function isMapValueType<T>(
   obj: any,
   isType: (val: any) => val is T
 ): obj is Record<any, T> {
-  return (isObject(obj) && obj !== null && !Array.isArray(obj) && Object.values(obj).every(isType));
+  return (isObject(obj) && !isNull(obj) && !Array.isArray(obj) && Object.values(obj).every(isType));
 }
 
 export function hasPrefix(

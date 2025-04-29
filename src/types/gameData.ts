@@ -1,13 +1,13 @@
-import { isDefined } from "../utils/utils";
-import { IAbility, ITypes, IMove, IItem, IPokemonMoves, IPokemonMovesInfo, IMoveItem, IPokemon, ILocation,
+import { isDefined, isString, isValidNumber } from "../utils/utils";
+import { IAbility, ITypes, IMove, IItem, IPokemonMovesInfo, IMoveItem, IPokemon, ILocation,
   IEvolution, IConfig, IGameConfig } from "./interfaces";
 import { MoveTarget, MoveEffectType, MoveFlag, ItemCategory, EggGroup, Ability, Type,
   TypeEffectivenessLevel, TypeEffectiveness, Move, Item, Pokemon, PokemonMoves, PokemonMovesInfo,
   Location, Evolution, CacheById, DependantCacheById, UpdatingCacheById,
   TypeEffectivenessLevelCache, TypeEffectivenessCache, MoveItemCache,
-  PokemonCache, PokemonMovesCache, EvolutionCache, Config, GameConfig } from "./classes";
+  CacheByIdSpecies, EvolutionCache, Config, GameConfig } from "./classes";
 
-export class GameData {
+class GameData {
   public readonly config: Readonly<Config>;
   public readonly gameConfig: Readonly<GameConfig>;
   public readonly abilities: Readonly<DependantCacheById<Readonly<Ability>>>;
@@ -22,13 +22,14 @@ export class GameData {
   public readonly items: Readonly<CacheById<Readonly<Item>>>;
   public readonly moveItems: Readonly<MoveItemCache>;
   public readonly eggGroups: Readonly<DependantCacheById<Readonly<EggGroup>>>;
-  public readonly pokemon: Readonly<PokemonCache>;
+  public readonly pokemon: Readonly<CacheByIdSpecies<Readonly<Pokemon>>>;
+  public readonly singleHiddenAbility: boolean | undefined;
   public readonly locations: Readonly<CacheById<Readonly<Location>>>;
   public readonly evolutions: Readonly<EvolutionCache>;
 
   private readPokemon(
     abilitiesCache: Readonly<UpdatingCacheById<Readonly<Ability>>>,
-    pokemonMovesCache: Readonly<PokemonMovesCache>,
+    pokemonMovesCache: Readonly<CacheByIdSpecies<Readonly<PokemonMoves>>>,
     eggGroups: Readonly<UpdatingCacheById<Readonly<EggGroup>>>,
     pokemon?: IPokemon[]
   ): Readonly<Pokemon>[] | undefined {
@@ -37,7 +38,10 @@ export class GameData {
     }
 
     const allStats = Object.freeze(Object.values(this.gameConfig.stats.byId));
-    const ps: Pokemon[] = [];
+    const ps = {
+      byId: {} as Record<number, Readonly<Pokemon>>,
+      bySpecies: {} as Record<string, Readonly<Pokemon>>
+    };
     let optionalId = 1;
     for (let i = 0; i < pokemon.length; i++) {
       const pi = pokemon[i];
@@ -46,20 +50,22 @@ export class GameData {
         optionalId,
         this.types.findById.bind(this.types),
         abilitiesCache.findById.bind(abilitiesCache),
-        pokemonMovesCache.findByIdOrSpecies.bind(pokemonMovesCache),
+        pokemonMovesCache.findByIdSpecies.bind(pokemonMovesCache),
         this.gameConfig.stats.findById.bind(this.gameConfig.stats),
         allStats,
         this.items.findById.bind(this.items),
+        (id) => CacheByIdSpecies.findByValueMaps(ps, id),
         eggGroups.findById.bind(eggGroups),
         (id, species) => this.gameConfig.isIgnored("pokemon", id) || this.gameConfig.isIgnored("pokemon", species),
         this.gameConfig.namePrefixes.findById("pokemon")
       );
       if (p) {
-        ps.push(p);
+        ps.byId[p.id] = p;
+        ps.bySpecies[p.species] = p;
         optionalId++;
       }
     }
-    return ps;
+    return Object.values(ps.byId);
   }
 
   constructor(
@@ -79,14 +85,13 @@ export class GameData {
     this.gameConfig = GameConfig.fromInterface(gameConfig);
 
     const loadedAbilities = CacheById.fromArray(
-      // abilities?.map(
-      //   a => Ability.fromInterface(
-      //     a,
-      //     id => this.gameConfig.isIgnored("ability", id),
-      //     this.gameConfig.namePrefixes.findById("ability")
-      //   )
-      // ).filter(isDefined) ??
-      []
+      abilities?.map(
+        a => Ability.fromInterface(
+          a,
+          id => this.gameConfig.isIgnored("ability", id),
+          this.gameConfig.namePrefixes.findById("ability")
+        )
+      ).filter(isDefined) ?? []
     );
 
     this.types = CacheById.fromArray(
@@ -175,28 +180,37 @@ export class GameData {
       id => EggGroup.fromId(id, this.gameConfig.namePrefixes.findById("egg_group")),
       this.gameConfig.eggGroups
     );
-    const pokemonMovesCache = PokemonMovesCache.fromArray(
+    const pokemonMovesCache = CacheByIdSpecies.fromArray(
       pokemonMoves?.map(
         pm => PokemonMovesInfo.fromInterface(
           pm,
           this.moves.findById.bind(this.moves),
           this.moveItems.findByMove.bind(this.moveItems))
-      ).filter(isDefined) ?? []
+      ).filter(isDefined) ?? [],
+      (pm: PokemonMovesInfo) => isValidNumber(pm.pokemon) ? pm.pokemon : undefined,
+      (pm: PokemonMovesInfo) => isString(pm.pokemon) ? pm.pokemon : undefined,
+      (pm: PokemonMovesInfo) => pm.moves
     );
     const abilitiesCache = UpdatingCacheById.fromData(
-      id => Ability.fromId(
+      (id, ignored) => Ability.fromId(
         id,
-        id => this.gameConfig.isIgnored("ability", id),
+        ignored,
         this.gameConfig.namePrefixes.findById("ability")
       ),
       loadedAbilities,
-      id => this.gameConfig.isIgnored("item", id)
+      id => this.gameConfig.isIgnored("ability", id)
     );
-    this.pokemon = PokemonCache.fromArray(
-      this.readPokemon(abilitiesCache, pokemonMovesCache, eggGroups, pokemon) ?? []
+    this.pokemon = CacheByIdSpecies.fromArray(
+      this.readPokemon(abilitiesCache, pokemonMovesCache, eggGroups, pokemon) ?? [],
+      (p: Pokemon) => p.id,
+      (p: Pokemon) => p.species,
+      (p: Pokemon) => p
     );
     this.abilities = abilitiesCache.toDependantCacheById();
     this.eggGroups = eggGroups.toDependantCacheById();
+    const maxHiddenAbilities = this.pokemon.values.map(p => p.hiddenAbilities?.length ?? 0).
+      reduce((acc, val) => Math.max(acc, val), 0);
+    this.singleHiddenAbility = maxHiddenAbilities === 0 ? undefined : maxHiddenAbilities === 1;
 
     this.locations = CacheById.fromArray(
       locations?.map(
@@ -231,4 +245,6 @@ export class GameData {
       ).filter(isDefined) ?? []
     );
   }
-}
+};
+
+export default GameData;

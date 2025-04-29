@@ -19,7 +19,7 @@
 
 .pageContainer {
   background-color: var(--bg-secondary, var(--background-color));
-  border-radius: 8px;
+  border-radius: var(--border-radius-md);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 2rem;
   margin-bottom: 2rem;
@@ -31,7 +31,7 @@
 
 .pageTitle {
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
   color: var(--text-primary, var(--text-color));
   margin-bottom: 0.5rem;
 }
@@ -43,6 +43,50 @@
 
 .searchAndFilter {
   margin-bottom: 1rem;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.arrContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+}
+
+.flexRow {
+  display: flex;
+  flex-direction: row;
+}
+
+.flexColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.hiddenAbility {
+  font-weight: var(--font-weight-bold);
+}
+
+.typeBadge {
+  padding: 4px 0;
+  border-radius: var(--border-radius-md);
+  text-align: center;
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  color: white;
+  display: block;
+  width: 64px;
+  text-shadow: 2px 2px 2px black;
+  border: 2px solid var(--border-color);
+}
+
+.typeSprite {
+  width: 5rem;
+  object-fit: contain;
 }
 
 @media (max-width: 768px) {

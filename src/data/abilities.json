@@ -2,5 +2,9 @@
   {
     "id": "ABILITY_OVERGROW",
     "description": "Ups Grass moves in a pinch."
+  },
+  {
+    "id": "ABILITY_CHLOROPHYLL",
+    "description": "Raises Speed in sunshine."
   }
 ]

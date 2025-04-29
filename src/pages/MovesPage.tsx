@@ -8,9 +8,9 @@ const MovesPage: React.FC = () => {
   const { gameData } = useGameData();
 
   // Get data from GameData
-  const movesData = Object.values(gameData.moves.byId).filter(m => !m.ignored);
-  const types = Object.values(gameData.types.byId);
-  const categories = Object.values(gameData.gameConfig.moveCategories.byId);
+  const movesData = gameData.moves.values.filter(m => !m.ignored);
+  const types = gameData.types.values;
+  const categories = gameData.gameConfig.moveCategories.values;
 
   // Create filter options
   const typeOptions = [

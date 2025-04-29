@@ -6,7 +6,7 @@
  * @returns Object containing paginated data and pagination info
  */
 export function paginateData<T>(
-  data: T[],
+  data: readonly T[],
   currentPage: number,
   itemsPerPage: number
 ): {

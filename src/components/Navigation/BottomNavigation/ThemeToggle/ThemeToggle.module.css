@@ -1,23 +1,4 @@
 .themeToggle {
-  border-radius: 50%;
   background-color: var(--bg-secondary);
-  border: 0.1rem solid var(--border-color);
-  padding: 0.5rem;
-  cursor: pointer;
   color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 0.2rem 0.5rem var(--shadow-color);
-}
-
-.themeToggle:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0.4rem 0.8rem var(--shadow-color);
-}
-
-.themeToggle svg {
-  width: 1.5rem;
-  height: 1.5rem;
 }
