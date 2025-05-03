@@ -36,6 +36,7 @@ export interface BaseDataPageProps<T> {
   itemsPerPage: number;
   entityType: EntityType;
   DetailsComponent: React.ComponentType<any>;
+  isWide?: boolean;
   searchPlaceholder?: string;
   enableSorting?: boolean;
   enableFiltering?: boolean;
@@ -58,6 +59,7 @@ export function BaseDataPage<T extends { id: string | number; name?: string }>({
   entityType,
   DetailsComponent,
   searchPlaceholder = `Search ${title.toLowerCase()}...`,
+  isWide = false,
   enableSorting = true,
   enableFiltering = true,
   enablePagination = true,
@@ -185,11 +187,11 @@ export function BaseDataPage<T extends { id: string | number; name?: string }>({
   };
 
   // Modal state
-  const { isOpen, selectedItem, modalStack, openModal, closeModal, closeAllModals } = useModal();
+  const { selectedItem, modalStack, openModal, closeModal, closeAllModals } = useModal();
 
   // Handle row click
   const handleRowClick = (item: T) => {
-    openModal(item);
+    openModal(item, isWide);
   };
 
   return (
@@ -216,6 +218,7 @@ export function BaseDataPage<T extends { id: string | number; name?: string }>({
       <Table
         columns={columns}
         data={paginatedData}
+        isWide={isWide}
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
@@ -233,17 +236,19 @@ export function BaseDataPage<T extends { id: string | number; name?: string }>({
       {modalStack.map((modal, index) => (
         <Modal
           key={`${modal.item.id}-${index}`}
-          isOpen={modal.isOpen}
+          isWide={modal.isWide}
+          setScroll={modal.setScroll}
           onClose={() => {
             if (index === modalStack.length - 1) {
               closeModal();
             }
           }}
           onCloseAll={closeAllModals}
-          title={selectedItem?.name || `${title} Details`}
+          title={modal.item.name || `${title} Details`}
           isStacked={index > 0}
+          sprite={modal.item.sprite}
         >
-          {selectedItem && <DetailsComponent {...selectedItem} />}
+          <DetailsComponent {...modal.item} />
         </Modal>
       ))}
     </div>

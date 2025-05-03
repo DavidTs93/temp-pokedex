@@ -19,10 +19,11 @@ export interface Column<T> {
 export interface TableProps<T> {
   columns: Column<T>[];
   data: readonly T[];
+  isWide: boolean;
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
-  onRowClick?: (item: T) => void;
+  onRowClick?: (item: T, isWide: boolean) => void;
   onSort?: (column: string, direction: 'asc' | 'desc') => void;
   secondarySortColumn?: string;
   sortColumn?: string | null;
@@ -36,6 +37,7 @@ export interface TableProps<T> {
 export function Table<T>({
   columns,
   data,
+  isWide,
   currentPage,
   totalPages,
   onPageChange,
@@ -80,9 +82,9 @@ export function Table<T>({
   };
 
   // Handle row click
-  const handleRowClick = (item: T) => {
+  const handleRowClick = (item: T, isWide: boolean) => {
     if (onRowClick) {
-      onRowClick(item);
+      onRowClick(item, isWide);
     }
   };
 
@@ -251,7 +253,7 @@ export function Table<T>({
             {paginatedData.map((item, rowIndex) => (
               <tr
                 key={rowIndex}
-                onClick={() => handleRowClick(item)}
+                onClick={() => handleRowClick(item, isWide)}
                 className={onRowClick ? appStyles.clickable : ''}
               >
                 {columns.map((column, colIndex) => (

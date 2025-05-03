@@ -12,9 +12,11 @@
   flex: 1;
   padding: 2rem;
   padding-bottom: 5rem;
-  max-width: 1200px;
+  max-width: var(--max-width);
   margin: 0 auto;
   width: 100%;
+  padding: var(--spacing-lg) 0;
+  min-height: calc(100vh - 200px);
 }
 
 .pageContainer {
@@ -54,17 +56,18 @@
   flex-wrap: wrap;
   gap: 4px;
   justify-content: center;
-  align-items: center;
 }
 
 .flexRow {
   display: flex;
   flex-direction: row;
+  align-content: flex-start;
 }
 
 .flexColumn {
   display: flex;
   flex-direction: column;
+  align-content: center;
 }
 
 .hiddenAbility {

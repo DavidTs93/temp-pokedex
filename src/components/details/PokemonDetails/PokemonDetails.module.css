@@ -1,9 +1,7 @@
 .pokemonDetails {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  padding: 1.5rem;
-  background-color: var(--bg-secondary);
+  gap: 8px;
   border-radius: var(--border-radius-md);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -15,13 +13,10 @@
   flex-wrap: wrap;
 }
 
-.pokemonImage {
+.pokemonSprite {
   width: 150px;
-  height: 150px;
   object-fit: contain;
-  background-color: var(--bg-tertiary);
-  border-radius: var(--border-radius-md);
-  padding: 1rem;
+  image-rendering: pixelated;
 }
 
 .pokemonInfo {
@@ -35,11 +30,16 @@
   margin-bottom: 0.5rem;
 }
 
+.eggGroup {
+  font-weight: var(--font-weight-bold);
+  margin: 0 4px;
+}
+
 .pokemonStats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
+  gap: 8px;
+  margin-top: 8px;
 }
 
 .statItem {

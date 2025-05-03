@@ -86,6 +86,7 @@ const PokemonPage: React.FC = () => {
       title="Pokémon"
       description="Browse and search for Pokémon"
       data={pokemonData}
+      isWide={true}
       columns={columns}
       filterOptions={[...typeOptions, ...abilityOptions, ...eggGroupOptions]}
       searchFields={['name', 'abilities']}

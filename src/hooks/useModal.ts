@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 interface ModalState<T> {
   item: T;
-  isOpen: boolean;
 }
 
 export function useModal<T extends { id: string | number }>() {
@@ -10,7 +9,7 @@ export function useModal<T extends { id: string | number }>() {
 
   // Open modal with entity
   const openModal = (item: T) => {
-    setModalStack(prev => [...prev, { item, isOpen: true }]);
+    setModalStack(prev => [...prev, { item }]);
   };
 
   // Close the topmost modal

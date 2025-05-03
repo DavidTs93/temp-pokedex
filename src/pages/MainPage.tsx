@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import TopNavigation from '../components/Navigation/TopNavigation/TopNavigation';
 import PokemonPage from './PokemonPage';
 import MovesPage from './MovesPage';
 import AbilitiesPage from './AbilitiesPage';
@@ -43,12 +42,9 @@ const MainPage: React.FC = () => {
   };
 
   return (
-    <div className={styles.mainPage}>
-      <TopNavigation />
-      <main className={styles.mainContent}>
-        {renderPage()}
-      </main>
-    </div>
+    <main className={styles.mainContent}>
+      {renderPage()}
+    </main>
   );
 };
 

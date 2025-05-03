@@ -1,4 +1,6 @@
 :root {
+  --max-width: 1600px;
+
   /* Theme Colors - Dark Mode (default) */
   --bg-primary: #121212;
   --bg-secondary: #1e1e1e;
@@ -150,14 +152,9 @@ a:hover {
 /* Layout Components */
 .container {
   width: 100%;
-  max-width: 1200px;
+  max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 var(--spacing-md);
-}
-
-.main-content {
-  padding: var(--spacing-lg) 0;
-  min-height: calc(100vh - 200px);
 }
 
 /* Grid System */

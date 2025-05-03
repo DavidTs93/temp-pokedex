@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Pokemon, Type, Ability, Move, EggGroup } from '../../../types/classes';
 import { useModal } from '../../../contexts/ModalContext';
 import styles from './PokemonDetails.module.css';
 import appStyles from '../../../styles/App.module.css';
+import modalStyles from '../../Modal/Modal.module.css';
 
 export function TypeDisplay(value: Type, keyProps?: Readonly<Record<string, any>>, extraClass?: string) {
   return value.sprite ?
@@ -14,35 +15,55 @@ export function TypeDisplay(value: Type, keyProps?: Readonly<Record<string, any>
 }
 
 const PokemonDetails: React.FC<Pokemon> = (pokemon) => {
-  const { openModal } = useModal();
+  const { openModal, setHeaderSpriteVisible, scroll } = useModal();
+
+  // Automatically update header sprite visibility based on scroll
+  useEffect(() => setHeaderSpriteVisible(scroll !== 0), [scroll, setHeaderSpriteVisible]);
 
   const handleTypeClick = (type: Type) => {
-    openModal(type);
+    openModal(type, false);
   };
 
   const handleAbilityClick = (ability: Ability) => {
-    openModal(ability);
+    openModal(ability, false);
   };
 
   const handleMoveClick = (move: Move) => {
-    openModal(move);
+    openModal(move, false);
   };
 
   const handleEggGroupClick = (eggGroup: EggGroup) => {
-    openModal(eggGroup);
+    openModal(eggGroup, false);
   };
 
   return (
     <div className={styles.pokemonDetails}>
-      <div className={styles.pokemonHeader}>
+      <div className={styles.pokemonSpriteContainer}>
         {pokemon.sprite && <img src={pokemon.sprite} alt={pokemon.name} className={styles.pokemonSprite} />}
         <div className={styles.pokemonInfo}>
-          <h2>{pokemon.name}</h2>
+          <h6 className={modalStyles.innerHeader}>Types</h6>
           <div className={`${appStyles.arrContainer} ${appStyles.flexRow}`}>
             {pokemon.types.map((type) =>
               TypeDisplay(type, { onClick: () => handleTypeClick(type) }, appStyles.clickable)
             )}
           </div>
+          <br />
+          {pokemon.eggGroups && pokemon.eggGroups.length > 0 && (
+            <div className={styles.detailSection}>
+              <h6 className={modalStyles.innerHeader}>Egg Groups</h6>
+              <div className={`${appStyles.arrContainer} ${appStyles.flexRow}`}>
+                {pokemon.eggGroups.map((eggGroup) => (
+                  <span
+                    key={eggGroup.id}
+                    className={`${styles.eggGroup} ${appStyles.clickable}`}
+                    onClick={() => handleEggGroupClick(eggGroup)}
+                  >
+                    {eggGroup.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -82,23 +103,6 @@ const PokemonDetails: React.FC<Pokemon> = (pokemon) => {
                   onClick={() => handleMoveClick(move.move)}
                 >
                   {move.move.name}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {pokemon.eggGroups && pokemon.eggGroups.length > 0 && (
-          <div className={styles.detailSection}>
-            <h3>Egg Groups</h3>
-            <div className={styles.pokemonEggGroups}>
-              {pokemon.eggGroups.map((eggGroup) => (
-                <span
-                  key={eggGroup.id}
-                  className={`${styles.eggGroup} ${appStyles.clickable}`}
-                  onClick={() => handleEggGroupClick(eggGroup)}
-                >
-                  {eggGroup.name}
                 </span>
               ))}
             </div>

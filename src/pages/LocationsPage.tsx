@@ -33,6 +33,7 @@ const LocationsPage: React.FC = () => {
       title="Locations"
       description="Browse and search for locations"
       data={locations}
+      isWide={true}
       columns={columns}
       filterOptions={filterOptions}
       searchFields={['name', 'description']}

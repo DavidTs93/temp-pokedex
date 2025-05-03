@@ -2,7 +2,6 @@
   --nav-height: 4rem;
   --nav-padding: 1rem;
   --nav-gap: 1rem;
-  --nav-bg: var(--bg-primary);
   --nav-text: var(--text-primary);
   --nav-border: var(--border-color);
   --nav-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -19,7 +18,7 @@
   right: 0;
   height: var(--nav-height);
   padding: var(--nav-padding);
-  background-color: var(--nav-bg);
+  background-color: var(--bg-primary);
   border-bottom: 1px solid var(--nav-border);
   box-shadow: var(--nav-shadow);
   z-index: 1000;
@@ -30,16 +29,15 @@
   align-items: center;
   justify-content: space-between;
   height: 100%;
-  max-width: 1200px;
+  max-width: var(--max-width);
   margin: 0 auto;
 }
 
 .navLogo {
-  display: flex;
   align-items: center;
-  gap: var(--nav-gap);
   text-decoration: none;
   color: var(--nav-text);
+  padding: 0 2rem;
 }
 
 .navLogo img {
