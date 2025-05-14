@@ -187,7 +187,7 @@ export function BaseDataPage<T extends { id: string | number; name?: string }>({
   };
 
   // Modal state
-  const { selectedItem, modalStack, openModal, closeModal, closeAllModals } = useModal();
+  const { modalStack, openModal, closeTopModal, closeAllModals } = useModal();
 
   // Handle row click
   const handleRowClick = (item: T) => {
@@ -235,18 +235,13 @@ export function BaseDataPage<T extends { id: string | number; name?: string }>({
       {/* Render all modals in the stack */}
       {modalStack.map((modal, index) => (
         <Modal
-          key={`${modal.item.id}-${index}`}
-          isWide={modal.isWide}
-          setScroll={modal.setScroll}
-          onClose={() => {
-            if (index === modalStack.length - 1) {
-              closeModal();
-            }
-          }}
+          index={index}
+          isTop={index === modalStack.length - 1}
+          onCloseTop={closeTopModal}
           onCloseAll={closeAllModals}
-          title={modal.item.name || `${title} Details`}
-          isStacked={index > 0}
-          sprite={modal.item.sprite}
+          fallbackTitle={`${title} Details`}
+          detailsComponent={DetailsComponent}
+          {...modal}
         >
           <DetailsComponent {...modal.item} />
         </Modal>

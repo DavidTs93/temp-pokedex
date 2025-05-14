@@ -86,7 +86,6 @@ const PokemonPage: React.FC = () => {
       title="Pokémon"
       description="Browse and search for Pokémon"
       data={pokemonData}
-      isWide={true}
       columns={columns}
       filterOptions={[...typeOptions, ...abilityOptions, ...eggGroupOptions]}
       searchFields={['name', 'abilities']}
@@ -98,6 +97,7 @@ const PokemonPage: React.FC = () => {
       itemsPerPage={gameData.config.pagination.pokemon}
       entityType="pokemon"
       DetailsComponent={PokemonDetails}
+      isWide={true}
       searchPlaceholder="Search Pokémon by name or description"
       enableSessionStorage={true}
       sessionStoragePrefix="pokemon"

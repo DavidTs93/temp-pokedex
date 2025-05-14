@@ -61,13 +61,13 @@
 .flexRow {
   display: flex;
   flex-direction: row;
-  align-content: flex-start;
+  justify-content: flex-start;
 }
 
 .flexColumn {
   display: flex;
   flex-direction: column;
-  align-content: center;
+  justify-content: center;
 }
 
 .hiddenAbility {

@@ -19,8 +19,12 @@
   image-rendering: pixelated;
 }
 
-.pokemonInfo {
-  flex: 1;
+.detailSection {
+  margin-bottom: 10px;
+}
+
+.pokemonTypes, .pokemonEggGroups {
+  margin-left: 10px;
 }
 
 .pokemonName {
@@ -218,9 +222,5 @@
 
   .pokemonStats {
     grid-template-columns: 1fr;
-  }
-
-  .detailSection ul {
-    justify-content: center;
   }
 }

@@ -1,40 +1,42 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './Modal.module.css';
-import { useModal } from '../../contexts/ModalContext';
 
 interface ModalProps {
-  setScroll: React.Dispatch<React.SetStateAction<number>>;
-  onClose: () => void;
-  onCloseAll?: () => void;
+  index: number;
+  isTop: boolean;
+  onCloseTop: () => void;
+  onCloseAll: () => void;
+  fallbackTitle: string;
+  detailsComponent: React.ComponentType<any>;
+  item: any;
+  isWide: boolean;
   children: React.ReactNode;
-  title?: string;
-  isStacked?: boolean;
-  isWide?: boolean;
-  sprite?: string;
 }
 
-const Modal: React.FC<ModalProps> = ({ onClose, onCloseAll, children, title, isStacked, isWide, sprite }) => {
+const Modal: React.FC<ModalProps> = ({ index, isTop, onCloseTop, onCloseAll, fallbackTitle, detailsComponent, item, isWide, children }) => {
   const modalOverlayRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
-  const { isHeaderSpriteVisible, setScroll } = useModal();
+  const [isHeaderSpriteVisible, setIsHeaderSpriteVisible] = useState(false);
+  // key={`${modal.item.id}-${index}`}
+  // isWide={modal.isWide}
+  // title={modal.item.name || `${title} Details`}
+  // isStacked={index > 0}
+  // headerSprite={modal.item.sprite}
+  const title = item.name || fallbackTitle;
 
   useEffect(() => {
     if (!modalOverlayRef.current) return;
     const el = modalOverlayRef.current;
-    const onScroll = () => setScroll(el.scrollTop);
+    const onScroll = () => setIsHeaderSpriteVisible(el.scrollTop > 0);
     el.addEventListener('scroll', onScroll);
     onScroll();
     return () => el.removeEventListener('scroll', onScroll);
-  }, [children, setScroll]);
+  }, []);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        if (onCloseAll) {
-          onCloseAll();
-        } else {
-          onClose();
-        }
+        onCloseAll();
       }
     };
     document.addEventListener('keydown', handleEscape);
@@ -43,12 +45,12 @@ const Modal: React.FC<ModalProps> = ({ onClose, onCloseAll, children, title, isS
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = 'unset';
     };
-  }, [onClose, onCloseAll]);
+  }, [onCloseAll]);
 
   return (
     <div
-      className={`${styles.modalOverlay} ${isStacked ? styles.modalStacked : ''}`}
-      onClick={onClose}
+      className={styles.modalOverlay}
+      onClick={onCloseTop}
       ref={modalOverlayRef}
     >
       <div
@@ -58,8 +60,8 @@ const Modal: React.FC<ModalProps> = ({ onClose, onCloseAll, children, title, isS
       >
         <div className={styles.modalHeader}>
           {title && <h2 className={styles.modalTitle}>{title}</h2>}
-          {sprite && isHeaderSpriteVisible && <img src={sprite} alt={title} className={styles.headerSprite} />}
-          <button className={styles.closeButton} onClick={onClose}>
+          {headerSprite && isHeaderSpriteVisible && <img src={headerSprite} alt={title} className={styles.headerSprite} />}
+          <button className={styles.closeButton} onClick={onCloseTop}>
             ×
           </button>
         </div>

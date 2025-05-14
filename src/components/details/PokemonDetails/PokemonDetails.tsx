@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Pokemon, Type, Ability, Move, EggGroup } from '../../../types/classes';
 import { useModal } from '../../../contexts/ModalContext';
 import styles from './PokemonDetails.module.css';
@@ -15,10 +15,7 @@ export function TypeDisplay(value: Type, keyProps?: Readonly<Record<string, any>
 }
 
 const PokemonDetails: React.FC<Pokemon> = (pokemon) => {
-  const { openModal, setHeaderSpriteVisible, scroll } = useModal();
-
-  // Automatically update header sprite visibility based on scroll
-  useEffect(() => setHeaderSpriteVisible(scroll !== 0), [scroll, setHeaderSpriteVisible]);
+  const { openModal } = useModal();
 
   const handleTypeClick = (type: Type) => {
     openModal(type, false);
@@ -38,20 +35,21 @@ const PokemonDetails: React.FC<Pokemon> = (pokemon) => {
 
   return (
     <div className={styles.pokemonDetails}>
-      <div className={styles.pokemonSpriteContainer}>
+      <div className={styles.pokemonHeader}>
         {pokemon.sprite && <img src={pokemon.sprite} alt={pokemon.name} className={styles.pokemonSprite} />}
         <div className={styles.pokemonInfo}>
-          <h6 className={modalStyles.innerHeader}>Types</h6>
-          <div className={`${appStyles.arrContainer} ${appStyles.flexRow}`}>
-            {pokemon.types.map((type) =>
-              TypeDisplay(type, { onClick: () => handleTypeClick(type) }, appStyles.clickable)
-            )}
+          <div className={styles.detailSection}>
+            <h6 className={modalStyles.innerHeader}>Types</h6>
+            <div className={`${appStyles.arrContainer} ${appStyles.flexRow} ${styles.pokemonTypes}`}>
+              {pokemon.types.map((type) =>
+                TypeDisplay(type, { onClick: () => handleTypeClick(type) }, appStyles.clickable)
+              )}
+            </div>
           </div>
-          <br />
           {pokemon.eggGroups && pokemon.eggGroups.length > 0 && (
             <div className={styles.detailSection}>
               <h6 className={modalStyles.innerHeader}>Egg Groups</h6>
-              <div className={`${appStyles.arrContainer} ${appStyles.flexRow}`}>
+              <div className={`${appStyles.arrContainer} ${appStyles.flexRow} ${styles.pokemonEggGroups}`}>
                 {pokemon.eggGroups.map((eggGroup) => (
                   <span
                     key={eggGroup.id}

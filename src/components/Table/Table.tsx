@@ -43,7 +43,6 @@ export function Table<T>({
   onPageChange,
   onRowClick,
   onSort,
-  secondarySortColumn,
   sortColumn,
   sortDirection = 'asc',
   emptyMessage = 'No data available',
@@ -52,7 +51,6 @@ export function Table<T>({
   itemsPerPage = 10
 }: TableProps<T>) {
   useGameData();
-  const navigate = useNavigate();
   const [internalSortColumn, setInternalSortColumn] = useState<string | null>(null);
   const [internalSortDirection, setInternalSortDirection] = useState<'asc' | 'desc'>('asc');
   const lastScrollY = useRef(0);
